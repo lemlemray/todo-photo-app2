@@ -132,29 +132,39 @@ photoInput.addEventListener(
   "change",
   event => {
 
-    const file =
-      event.target.files[0];
+    const files =
+      event.target.files;
 
-    if (!file) return;
+    if (!files.length) return;
 
-    const reader =
-      new FileReader();
+    let loadedCount = 0;
 
-    reader.onload = function(e) {
+    for (let i = 0; i < files.length; i++) {
 
-      const imageData =
-        e.target.result;
+      const reader =
+        new FileReader();
 
-      allImages.push(imageData);
+      reader.onload = function(e) {
 
-      localStorage.setItem(
-        "allImages",
-        JSON.stringify(allImages)
-      );
+        const imageData =
+          e.target.result;
 
-      location.reload();
-    };
+        allImages.push(imageData);
 
-    reader.readAsDataURL(file);
+        loadedCount++;
+
+        if (loadedCount === files.length) {
+
+          localStorage.setItem(
+            "allImages",
+            JSON.stringify(allImages)
+          );
+
+          location.reload();
+        }
+      };
+
+      reader.readAsDataURL(files[i]);
+    }
   }
 );
