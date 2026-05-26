@@ -2,16 +2,19 @@ const gallery =
   document.getElementById("gallery");
 
 const deleteSelectedButton =
-  document.getElementById("delete-selected");
-
-const deleteAllButton =
-  document.getElementById("delete-all");
+  document.getElementById(
+    "delete-selected"
+  );
 
 const selectAllButton =
-  document.getElementById("select-all");
+  document.getElementById(
+    "select-all"
+  );
 
 const clearSelectionButton =
-  document.getElementById("clear-selection");
+  document.getElementById(
+    "clear-selection"
+  );
 
 let allImages =
   JSON.parse(
@@ -26,18 +29,28 @@ function draw() {
 
   gallery.innerHTML = "";
 
-  for (let i = 0; i < allImages.length; i++) {
+  for (
+    let i = 0;
+    i < allImages.length;
+    i++
+  ) {
 
-    const image = allImages[i];
+    const image =
+      allImages[i];
 
     const item =
       document.createElement("div");
 
-    item.className = "image-item";
+    item.className =
+      "image-item";
 
-    if (selected.includes(i)) {
+    if (
+      selected.includes(i)
+    ) {
 
-      item.classList.add("selected");
+      item.classList.add(
+        "selected"
+      );
     }
 
     const img =
@@ -52,7 +65,9 @@ function draw() {
 
     item.onclick = () => {
 
-      if (selected.includes(i)) {
+      if (
+        selected.includes(i)
+      ) {
 
         selected =
           selected.filter(
@@ -75,7 +90,11 @@ selectAllButton.onclick = () => {
 
   selected = [];
 
-  for (let i = 0; i < allImages.length; i++) {
+  for (
+    let i = 0;
+    i < allImages.length;
+    i++
+  ) {
 
     selected.push(i);
   }
@@ -94,36 +113,23 @@ deleteSelectedButton.onclick = () => {
 
   const newImages = [];
 
-  for (let i = 0; i < allImages.length; i++) {
+  for (
+    let i = 0;
+    i < allImages.length;
+    i++
+  ) {
 
-    if (!selected.includes(i)) {
+    if (
+      !selected.includes(i)
+    ) {
 
-      newImages.push(allImages[i]);
+      newImages.push(
+        allImages[i]
+      );
     }
   }
 
   allImages = newImages;
-
-  localStorage.setItem(
-    "allImages",
-    JSON.stringify(allImages)
-  );
-
-  selected = [];
-
-  draw();
-};
-
-deleteAllButton.onclick = () => {
-
-  const ok =
-    confirm(
-      "すべて削除しますか？"
-    );
-
-  if (!ok) return;
-
-  allImages = [];
 
   localStorage.setItem(
     "allImages",

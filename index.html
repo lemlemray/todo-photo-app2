@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Photo Todo</title>
+  <title>Todo Photo App</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -21,12 +21,7 @@
 
   <div class="container">
 
-    <input
-      type="file"
-      id="photo-input"
-      accept="image/*"
-      multiple
-    >
+    <h1>What do you need?</h1>
 
     <div class="input-area">
 
@@ -44,8 +39,22 @@
 
     <ul id="todo-list"></ul>
 
-    <a href="gallery.html">
-      画像管理ページ
+    <div class="photo-area">
+
+      <input
+        type="file"
+        id="photo-input"
+        accept="image/*"
+        multiple
+      >
+
+    </div>
+
+    <a
+      href="gallery.html"
+      class="gallery-link"
+    >
+      画像管理へ
     </a>
 
   </div>

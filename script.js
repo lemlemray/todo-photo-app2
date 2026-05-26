@@ -5,7 +5,10 @@ const initialImages = [
   "images/S__4038784_0.jpg"
 ];
 
-if (localStorage.getItem("allImages") === null) {
+if (
+  localStorage.getItem("allImages")
+  === null
+) {
 
   localStorage.setItem(
     "allImages",
@@ -148,7 +151,11 @@ photoInput.addEventListener(
 
     let loadedCount = 0;
 
-    for (let i = 0; i < files.length; i++) {
+    for (
+      let i = 0;
+      i < files.length;
+      i++
+    ) {
 
       const reader =
         new FileReader();
