@@ -1,13 +1,17 @@
 const gallery =
   document.getElementById("gallery");
 
-const deleteSelectedButton =
-  document.getElementById("delete-selected");
+const deleteButton =
+  document.getElementById(
+    "delete-selected"
+  );
 
 let allImages =
   JSON.parse(
     localStorage.getItem("allImages")
   ) || [];
+
+let selectedIndexes = [];
 
 showGallery();
 
@@ -22,59 +26,65 @@ function showGallery() {
 
     div.className = "image-item";
 
-    const checkbox =
-      document.createElement("input");
+    if (
+      selectedIndexes.includes(index)
+    ) {
 
-    checkbox.type = "checkbox";
-
-    checkbox.className =
-      "image-check";
-
-    checkbox.dataset.index = index;
+      div.classList.add("selected");
+    }
 
     const img =
       document.createElement("img");
 
     img.src = image;
 
-    img.className = "gallery-image";
-
-    div.appendChild(checkbox);
+    img.className =
+      "gallery-image";
 
     div.appendChild(img);
 
     gallery.appendChild(div);
+
+    div.addEventListener(
+      "click",
+      () => {
+
+        if (
+          selectedIndexes.includes(index)
+        ) {
+
+          selectedIndexes =
+            selectedIndexes.filter(
+              i => i !== index
+            );
+
+        } else {
+
+          selectedIndexes.push(index);
+        }
+
+        showGallery();
+      }
+    );
   });
 }
 
-deleteSelectedButton.addEventListener(
+deleteButton.addEventListener(
   "click",
   () => {
-
-    const checked =
-      document.querySelectorAll(
-        ".image-check:checked"
-      );
-
-    const indexes = [];
-
-    checked.forEach(box => {
-
-      indexes.push(
-        Number(box.dataset.index)
-      );
-    });
 
     allImages =
       allImages.filter(
         (_, index) =>
-          !indexes.includes(index)
+          !selectedIndexes.includes(index)
       );
 
     localStorage.setItem(
       "allImages",
       JSON.stringify(allImages)
     );
+
+    selectedIndexes = [];
 
     showGallery();
   }
