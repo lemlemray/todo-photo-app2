@@ -5,8 +5,10 @@
 }
 
 body {
+
   background: black;
   color: white;
+
   font-family: sans-serif;
 
   min-height: 100vh;
@@ -16,55 +18,76 @@ body {
 
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 }
 
 .overlay {
+
   position: fixed;
   inset: 0;
+
   background: rgba(0,0,0,0.5);
+
   z-index: 0;
 }
 
 .container {
+
   width: 100%;
   max-width: 430px;
+
   padding: 20px;
+
   position: relative;
   z-index: 1;
 }
 
 #photo-input {
+
   width: 100%;
+
   margin-bottom: 20px;
+
   color: white;
 }
 
 .input-area {
+
   display: flex;
+
+  margin-bottom: 20px;
 }
 
 #task-input {
+
   flex: 1;
+
   padding: 18px;
+
   font-size: 18px;
 
-  background: rgba(0,0,0,0.7);
   border: 1px solid #333;
+
+  background: rgba(0,0,0,0.7);
+
   color: white;
 }
 
 #add-button {
+
   padding: 18px;
+
   border: none;
+
   background: white;
 }
 
 #todo-list {
-  margin-top: 20px;
+
+  margin-bottom: 30px;
 }
 
 .task {
+
   list-style: none;
 
   background: rgba(0,0,0,0.75);
@@ -79,23 +102,34 @@ body {
 
   display: flex;
   align-items: center;
+
   gap: 15px;
 }
 
 .task input[type="checkbox"] {
+
   width: 25px;
   height: 25px;
 }
+
+h2 {
+
+  margin-bottom: 15px;
+
+  font-size: 20px;
+}
+
 #gallery {
-  margin-top: 30px;
 
   display: flex;
   flex-direction: column;
-  gap: 15px;
+
+  gap: 20px;
 }
 
 .image-item {
-  background: rgba(0,0,0,0.7);
+
+  background: rgba(0,0,0,0.75);
 
   padding: 10px;
 
@@ -103,16 +137,19 @@ body {
 }
 
 .image-item img {
+
   width: 100%;
+
   border-radius: 10px;
 }
 
 .delete-image {
-  margin-top: 10px;
 
   width: 100%;
 
-  padding: 12px;
+  margin-top: 10px;
+
+  padding: 15px;
 
   border: none;
 
@@ -121,4 +158,6 @@ body {
   color: white;
 
   font-size: 16px;
+
+  border-radius: 10px;
 }

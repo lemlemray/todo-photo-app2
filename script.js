@@ -6,8 +6,9 @@ const defaultImages = [
 ];
 
 const savedImages =
-  JSON.parse(localStorage.getItem("userImages"))
-  || [];
+  JSON.parse(
+    localStorage.getItem("userImages")
+  ) || [];
 
 const allImages = [
   ...defaultImages,
@@ -16,14 +17,19 @@ const allImages = [
 
 const randomImage =
   allImages[
-    Math.floor(Math.random() * allImages.length)
+    Math.floor(
+      Math.random() * allImages.length
+    )
   ];
 
 document.body.style.backgroundImage =
   `url(${randomImage})`;
 
-document.body.style.backgroundSize = "cover";
-document.body.style.backgroundPosition = "center";
+document.body.style.backgroundSize =
+  "cover";
+
+document.body.style.backgroundPosition =
+  "center";
 
 const taskInput =
   document.getElementById("task-input");
@@ -38,7 +44,8 @@ loadTasks();
 
 addButton.addEventListener("click", () => {
 
-  const text = taskInput.value.trim();
+  const text =
+    taskInput.value.trim();
 
   if (text === "") return;
 
@@ -51,7 +58,8 @@ addButton.addEventListener("click", () => {
 
 function createTask(text) {
 
-  const li = document.createElement("li");
+  const li =
+    document.createElement("li");
 
   li.className = "task";
 
@@ -102,8 +110,9 @@ function saveTasks() {
 function loadTasks() {
 
   const tasks =
-    JSON.parse(localStorage.getItem("tasks"))
-    || [];
+    JSON.parse(
+      localStorage.getItem("tasks")
+    ) || [];
 
   tasks.forEach(task => {
 
@@ -115,41 +124,55 @@ function loadTasks() {
 const photoInput =
   document.getElementById("photo-input");
 
-photoInput.addEventListener("change", event => {
+photoInput.addEventListener(
+  "change",
+  event => {
 
-  const file = event.target.files[0];
+    const file =
+      event.target.files[0];
 
-  if (!file) return;
+    if (!file) return;
 
-  const reader = new FileReader();
+    const reader =
+      new FileReader();
 
-  reader.onload = function(e) {
+    reader.onload = function(e) {
 
-    const imageData = e.target.result;
+      const imageData =
+        e.target.result;
 
-    const currentImages =
-      JSON.parse(
-        localStorage.getItem("userImages")
-      ) || [];
+      const currentImages =
+        JSON.parse(
+          localStorage.getItem(
+            "userImages"
+          )
+        ) || [];
 
-    currentImages.push(imageData);
+      currentImages.push(imageData);
 
-    localStorage.setItem(
-      "userImages",
-      JSON.stringify(currentImages)
-    );
+      localStorage.setItem(
+        "userImages",
+        JSON.stringify(currentImages)
+      );
 
-    location.reload();
-  };
+      location.reload();
+    };
 
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+  }
+);
+
+window.addEventListener("load", () => {
+
+  showGallery();
 });
-showGallery();
 
 function showGallery() {
 
   const gallery =
     document.getElementById("gallery");
+
+  if (!gallery) return;
 
   gallery.innerHTML = "";
 
@@ -173,11 +196,12 @@ function showGallery() {
     const button =
       document.createElement("button");
 
-    button.className = "delete-image";
+    button.className =
+      "delete-image";
 
     button.textContent = "削除";
 
-    button.addEventListener("click", () => {
+    button.onclick = () => {
 
       userImages.splice(index, 1);
 
@@ -186,8 +210,8 @@ function showGallery() {
         JSON.stringify(userImages)
       );
 
-      location.reload();
-    });
+      showGallery();
+    };
 
     div.appendChild(img);
     div.appendChild(button);
