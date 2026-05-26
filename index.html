@@ -1,24 +1,105 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photo Todo</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+const images = [
+  "images/S__4038904_0.jpg",
+  "images/S__4038905_0.jpg",
+  "images/S__4038906_0.jpg",
+  "images/S__4038907_0.jpg"
+];
 
-<body>
+const randomImage =
+  images[Math.floor(Math.random() * images.length)];
 
-  <img id="random-image">
+document.getElementById("random-image").src = randomImage;
 
-  <div class="input-area">
-    <input type="text" id="task-input" placeholder="タスクを書く">
-    <button onclick="addTask()">追加</button>
-  </div>
+const todoList =
+  document.getElementById("todo-list");
 
-  <ul id="todo-list"></ul>
+loadTasks();
 
-  <script src="script.js"></script>
+function addTask() {
 
-</body>
-</html>
+  const input =
+    document.getElementById("task-input");
+
+  const text = input.value;
+
+  if (text.trim() === "") return;
+
+  createTask(text);
+
+  saveTasks();
+
+  input.value = "";
+}
+
+function createTask(text) {
+
+  const li = document.createElement("li");
+
+  li.className = "task";
+
+  li.innerHTML = `
+    <input type="checkbox" class="check">
+    <span>${text}</span>
+  `;
+
+  let startX = 0;
+
+  li.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  li.addEventListener("touchend", e => {
+
+    const endX = e.changedTouches[0].clientX;
+
+    const checked =
+      li.querySelector(".check").checked;
+
+    if (startX - endX > 100 && checked) {
+
+      li.classList.add("remove");
+
+      setTimeout(() => {
+
+        li.remove();
+
+        saveTasks();
+
+      }, 300);
+    }
+
+  });
+
+  todoList.appendChild(li);
+}
+
+function saveTasks() {
+
+  const tasks = [];
+
+  document
+    .querySelectorAll(".task span")
+    .forEach(task => {
+
+      tasks.push(task.textContent);
+
+    });
+
+  localStorage.setItem(
+    "tasks",
+    JSON.stringify(tasks)
+  );
+}
+
+function loadTasks() {
+
+  const tasks =
+    JSON.parse(localStorage.getItem("tasks"))
+    || [];
+
+  tasks.forEach(task => {
+
+    createTask(task);
+
+  });
+}
