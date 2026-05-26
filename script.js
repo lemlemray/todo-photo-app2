@@ -1,89 +1,55 @@
-const images = [
-  "images/S__4038904_0.jpg",
-  "images/S__4038905_0.jpg",
-  "images/S__4038906_0.jpg",
-  "images/S__4038907_0.jpg"
-];
-
-const randomImage =
-  images[Math.floor(Math.random() * images.length)];
-
-document.getElementById("random-image").src = randomImage;
-
-const todoList =
-  document.getElementById("todo-list");
+const taskInput = document.getElementById("task-input");
+const addButton = document.getElementById("add-button");
+const todoList = document.getElementById("todo-list");
 
 loadTasks();
 
-function addTask() {
+addButton.addEventListener("click", () => {
+  const text = taskInput.value.trim();
 
-  const input =
-    document.getElementById("task-input");
-
-  const text = input.value;
-
-  if (text.trim() === "") return;
+  if (text === "") return;
 
   createTask(text);
 
   saveTasks();
 
-  input.value = "";
-}
+  taskInput.value = "";
+});
 
 function createTask(text) {
 
   const li = document.createElement("li");
-
   li.className = "task";
 
-  li.innerHTML = `
-    <input type="checkbox" class="check">
-    <span>${text}</span>
-  `;
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
 
-  let startX = 0;
+  const span = document.createElement("span");
+  span.textContent = text;
 
-  li.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  });
-
-  li.addEventListener("touchend", e => {
-
-    const endX = e.changedTouches[0].clientX;
-
-    const checked =
-      li.querySelector(".check").checked;
-
-    if (startX - endX > 100 && checked) {
-
-      li.classList.add("remove");
-
-      setTimeout(() => {
-
-        li.remove();
-
-        saveTasks();
-
-      }, 300);
-    }
-
-  });
+  li.appendChild(checkbox);
+  li.appendChild(span);
 
   todoList.appendChild(li);
+
+  checkbox.addEventListener("change", () => {
+
+    if (checkbox.checked) {
+
+      li.remove();
+
+      saveTasks();
+    }
+  });
 }
 
 function saveTasks() {
 
   const tasks = [];
 
-  document
-    .querySelectorAll(".task span")
-    .forEach(task => {
-
-      tasks.push(task.textContent);
-
-    });
+  document.querySelectorAll(".task span").forEach(span => {
+    tasks.push(span.textContent);
+  });
 
   localStorage.setItem(
     "tasks",
@@ -98,8 +64,52 @@ function loadTasks() {
     || [];
 
   tasks.forEach(task => {
-
     createTask(task);
-
   });
 }
+
+const photoInput = document.getElementById("photo-input");
+
+photoInput.addEventListener("change", (event) => {
+
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    const imageData = e.target.result;
+
+    document.body.style.backgroundImage =
+      `url(${imageData})`;
+
+    document.body.style.backgroundSize = "cover";
+
+    document.body.style.backgroundPosition = "center";
+
+    localStorage.setItem(
+      "backgroundImage",
+      imageData
+    );
+  };
+
+  reader.readAsDataURL(file);
+});
+
+window.addEventListener("load", () => {
+
+  const savedImage =
+    localStorage.getItem("backgroundImage");
+
+  if (savedImage) {
+
+    document.body.style.backgroundImage =
+      `url(${savedImage})`;
+
+    document.body.style.backgroundSize = "cover";
+
+    document.body.style.backgroundPosition = "center";
+  }
+});

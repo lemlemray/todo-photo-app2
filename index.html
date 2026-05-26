@@ -6,19 +6,23 @@
   <title>Photo Todo</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <img id="random-image">
+  <div class="overlay"></div>
 
-  <div class="input-area">
-    <input type="text" id="task-input" placeholder="タスクを書く">
-    <button onclick="addTask()">追加</button>
+  <div class="container">
+
+    <input type="file" id="photo-input" accept="image/*">
+
+    <div class="input-area">
+      <input type="text" id="task-input" placeholder="タスクを書く">
+      <button id="add-button">追加</button>
+    </div>
+
+    <ul id="todo-list"></ul>
+
   </div>
 
-  <ul id="todo-list"></ul>
-
   <script src="script.js"></script>
-
 </body>
 </html>
