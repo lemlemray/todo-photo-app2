@@ -1,14 +1,19 @@
 const images = [
-  "images/S__4038781_0.jpg",
-  "images/S__4038782_0.jpg",
-  "images/S__4038783_0.jpg",
-  "images/S__4038784_0.jpg"
+  "images/S__4038904_0.jpg",
+  "images/S__4038905_0.jpg",
+  "images/S__4038906_0.jpg",
+  "images/S__4038907_0.jpg"
 ];
 
 const randomImage =
   images[Math.floor(Math.random() * images.length)];
 
 document.getElementById("random-image").src = randomImage;
+
+const todoList =
+  document.getElementById("todo-list");
+
+loadTasks();
 
 function addTask() {
 
@@ -18,6 +23,15 @@ function addTask() {
   const text = input.value;
 
   if (text.trim() === "") return;
+
+  createTask(text);
+
+  saveTasks();
+
+  input.value = "";
+}
+
+function createTask(text) {
 
   const li = document.createElement("li");
 
@@ -38,19 +52,54 @@ function addTask() {
 
     const endX = e.changedTouches[0].clientX;
 
-    if (startX - endX > 100) {
+    const checked =
+      li.querySelector(".check").checked;
+
+    if (startX - endX > 100 && checked) {
+
       li.classList.add("remove");
 
       setTimeout(() => {
+
         li.remove();
+
+        saveTasks();
+
       }, 300);
     }
 
   });
 
-  document
-    .getElementById("todo-list")
-    .appendChild(li);
+  todoList.appendChild(li);
+}
 
-  input.value = "";
+function saveTasks() {
+
+  const tasks = [];
+
+  document
+    .querySelectorAll(".task span")
+    .forEach(task => {
+
+      tasks.push(task.textContent);
+
+    });
+
+  localStorage.setItem(
+    "tasks",
+    JSON.stringify(tasks)
+  );
+}
+
+function loadTasks() {
+
+  const tasks =
+    JSON.parse(localStorage.getItem("tasks"))
+    || [];
+
+  tasks.forEach(task => {
+
+    createTask(task);
+
+  });
 }
