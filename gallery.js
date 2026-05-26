@@ -6,6 +6,21 @@ const deleteButton =
     "delete-selected"
   );
 
+const deleteAllButton =
+  document.getElementById(
+    "delete-all"
+  );
+
+const selectAllButton =
+  document.getElementById(
+    "select-all"
+  );
+
+const clearButton =
+  document.getElementById(
+    "clear-selection"
+  );
+
 let allImages =
   JSON.parse(
     localStorage.getItem("allImages")
@@ -69,6 +84,29 @@ function showGallery() {
   });
 }
 
+selectAllButton.addEventListener(
+  "click",
+  () => {
+
+    selectedIndexes =
+      allImages.map(
+        (_, index) => index
+      );
+
+    showGallery();
+  }
+);
+
+clearButton.addEventListener(
+  "click",
+  () => {
+
+    selectedIndexes = [];
+
+    showGallery();
+  }
+);
+
 deleteButton.addEventListener(
   "click",
   () => {
@@ -78,6 +116,30 @@ deleteButton.addEventListener(
         (_, index) =>
           !selectedIndexes.includes(index)
       );
+
+    localStorage.setItem(
+      "allImages",
+      JSON.stringify(allImages)
+    );
+
+    selectedIndexes = [];
+
+    showGallery();
+  }
+);
+
+deleteAllButton.addEventListener(
+  "click",
+  () => {
+
+    const ok =
+      confirm(
+        "本当にすべて削除しますか？"
+      );
+
+    if (!ok) return;
+
+    allImages = [];
 
     localStorage.setItem(
       "allImages",
