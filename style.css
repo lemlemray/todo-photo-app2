@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#random-image {
+  width: 100%;
+  max-width: 430px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.input-area {
+  width: 90%;
+  max-width: 430px;
+  display: flex;
+  margin-top: 20px;
+}
+
+#task-input {
+  flex: 1;
+  padding: 15px;
+  background: #111;
+  border: none;
+  color: white;
+  font-size: 16px;
+}
+
+button {
+  padding: 15px;
+  background: white;
+  border: none;
+}
+
+#todo-list {
+  width: 90%;
+  max-width: 430px;
+  padding: 0;
+}
+
+.task {
+  list-style: none;
+  background: #111;
+  margin-top: 10px;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  transition: 0.3s;
+}
+
+.remove {
+  transform: translateX(-100%);
+  opacity: 0;
+}
