@@ -28,24 +28,24 @@ let allImages =
 
 let selectedIndexes = [];
 
-showGallery();
+renderGallery();
 
-function showGallery() {
+function renderGallery() {
 
   gallery.innerHTML = "";
 
   allImages.forEach((image, index) => {
 
-    const div =
+    const item =
       document.createElement("div");
 
-    div.className = "image-item";
+    item.className = "image-item";
 
     if (
       selectedIndexes.includes(index)
     ) {
 
-      div.classList.add("selected");
+      item.classList.add("selected");
     }
 
     const img =
@@ -56,11 +56,9 @@ function showGallery() {
     img.className =
       "gallery-image";
 
-    div.appendChild(img);
+    item.appendChild(img);
 
-    gallery.appendChild(div);
-
-    div.addEventListener(
+    item.addEventListener(
       "click",
       () => {
 
@@ -78,9 +76,11 @@ function showGallery() {
           selectedIndexes.push(index);
         }
 
-        showGallery();
+        renderGallery();
       }
     );
+
+    gallery.appendChild(item);
   });
 }
 
@@ -93,7 +93,7 @@ selectAllButton.addEventListener(
         (_, index) => index
       );
 
-    showGallery();
+    renderGallery();
   }
 );
 
@@ -103,13 +103,17 @@ clearButton.addEventListener(
 
     selectedIndexes = [];
 
-    showGallery();
+    renderGallery();
   }
 );
 
 deleteButton.addEventListener(
   "click",
   () => {
+
+    if (
+      selectedIndexes.length === 0
+    ) return;
 
     allImages =
       allImages.filter(
@@ -124,7 +128,7 @@ deleteButton.addEventListener(
 
     selectedIndexes = [];
 
-    showGallery();
+    renderGallery();
   }
 );
 
@@ -148,6 +152,6 @@ deleteAllButton.addEventListener(
 
     selectedIndexes = [];
 
-    showGallery();
+    renderGallery();
   }
 );

@@ -41,76 +41,6 @@ body {
   z-index: 1;
 }
 
-#photo-input {
-
-  width: 100%;
-
-  margin-bottom: 20px;
-
-  color: white;
-}
-
-.input-area {
-
-  display: flex;
-
-  margin-bottom: 20px;
-}
-
-#task-input {
-
-  flex: 1;
-
-  padding: 15px;
-
-  background: rgba(0,0,0,0.7);
-
-  border: 1px solid #333;
-
-  color: white;
-
-  font-size: 16px;
-}
-
-#add-button {
-
-  padding: 15px;
-
-  border: none;
-
-  background: white;
-}
-
-#todo-list {
-
-  margin-bottom: 20px;
-}
-
-.task {
-
-  list-style: none;
-
-  background: rgba(0,0,0,0.75);
-
-  padding: 15px;
-
-  border-radius: 15px;
-
-  margin-bottom: 10px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-}
-
-.task input[type="checkbox"] {
-
-  width: 20px;
-  height: 20px;
-}
-
 .top-buttons {
 
   display: flex;
@@ -145,7 +75,9 @@ body {
 
   gap: 2px;
 
-  padding-bottom: 120px;
+  padding-bottom: 180px;
+
+  margin-top: 20px;
 }
 
 .image-item {
@@ -163,7 +95,7 @@ body {
 
   border: 2px solid #4da6ff;
 
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .gallery-image {
@@ -188,7 +120,9 @@ body {
 
   padding: 10px;
 
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.92);
+
+  backdrop-filter: blur(10px);
 }
 
 #delete-selected {
@@ -206,12 +140,13 @@ body {
   color: white;
 
   font-size: 16px;
+
+  margin-bottom: 10px;
 }
+
 #delete-all {
 
   width: 100%;
-
-  margin-top: 10px;
 
   padding: 16px;
 

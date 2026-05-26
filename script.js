@@ -5,7 +5,7 @@ const initialImages = [
   "images/S__4038784_0.jpg"
 ];
 
-if (!localStorage.getItem("allImages")) {
+if (localStorage.getItem("allImages") === null) {
 
   localStorage.setItem(
     "allImages",
@@ -18,21 +18,24 @@ let allImages =
     localStorage.getItem("allImages")
   ) || [];
 
-const randomImage =
-  allImages[
-    Math.floor(
-      Math.random() * allImages.length
-    )
-  ];
+if (allImages.length > 0) {
 
-document.body.style.backgroundImage =
-  `url(${randomImage})`;
+  const randomImage =
+    allImages[
+      Math.floor(
+        Math.random() * allImages.length
+      )
+    ];
 
-document.body.style.backgroundSize =
-  "cover";
+  document.body.style.backgroundImage =
+    `url(${randomImage})`;
 
-document.body.style.backgroundPosition =
-  "center";
+  document.body.style.backgroundSize =
+    "cover";
+
+  document.body.style.backgroundPosition =
+    "center";
+}
 
 const taskInput =
   document.getElementById("task-input");
@@ -45,19 +48,22 @@ const todoList =
 
 loadTasks();
 
-addButton.addEventListener("click", () => {
+addButton.addEventListener(
+  "click",
+  () => {
 
-  const text =
-    taskInput.value.trim();
+    const text =
+      taskInput.value.trim();
 
-  if (text === "") return;
+    if (text === "") return;
 
-  createTask(text);
+    createTask(text);
 
-  saveTasks();
+    saveTasks();
 
-  taskInput.value = "";
-});
+    taskInput.value = "";
+  }
+);
 
 function createTask(text) {
 
@@ -82,15 +88,18 @@ function createTask(text) {
 
   todoList.appendChild(li);
 
-  checkbox.addEventListener("change", () => {
+  checkbox.addEventListener(
+    "change",
+    () => {
 
-    if (checkbox.checked) {
+      if (checkbox.checked) {
 
-      li.remove();
+        li.remove();
 
-      saveTasks();
+        saveTasks();
+      }
     }
-  });
+  );
 }
 
 function saveTasks() {
@@ -153,7 +162,9 @@ photoInput.addEventListener(
 
         loadedCount++;
 
-        if (loadedCount === files.length) {
+        if (
+          loadedCount === files.length
+        ) {
 
           localStorage.setItem(
             "allImages",
