@@ -1,3 +1,9 @@
+const gallery =
+  document.getElementById("gallery");
+
+const deleteSelectedButton =
+  document.getElementById("delete-selected");
+
 let allImages =
   JSON.parse(
     localStorage.getItem("allImages")
@@ -6,9 +12,6 @@ let allImages =
 showGallery();
 
 function showGallery() {
-
-  const gallery =
-    document.getElementById("gallery");
 
   gallery.innerHTML = "";
 
@@ -19,35 +22,60 @@ function showGallery() {
 
     div.className = "image-item";
 
+    const checkbox =
+      document.createElement("input");
+
+    checkbox.type = "checkbox";
+
+    checkbox.className =
+      "image-check";
+
+    checkbox.dataset.index = index;
+
     const img =
       document.createElement("img");
 
     img.src = image;
 
-    const button =
-      document.createElement("button");
+    img.className = "gallery-image";
 
-    button.className =
-      "delete-image";
-
-    button.textContent = "削除";
-
-    button.onclick = () => {
-
-      allImages.splice(index, 1);
-
-      localStorage.setItem(
-        "allImages",
-        JSON.stringify(allImages)
-      );
-
-      showGallery();
-    };
+    div.appendChild(checkbox);
 
     div.appendChild(img);
-
-    div.appendChild(button);
 
     gallery.appendChild(div);
   });
 }
+
+deleteSelectedButton.addEventListener(
+  "click",
+  () => {
+
+    const checked =
+      document.querySelectorAll(
+        ".image-check:checked"
+      );
+
+    const indexes = [];
+
+    checked.forEach(box => {
+
+      indexes.push(
+        Number(box.dataset.index)
+      );
+    });
+
+    allImages =
+      allImages.filter(
+        (_, index) =>
+          !indexes.includes(index)
+      );
+
+    localStorage.setItem(
+      "allImages",
+      JSON.stringify(allImages)
+    );
+
+    showGallery();
+  }
+);

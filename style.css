@@ -161,3 +161,30 @@ h2 {
 
   border-radius: 10px;
 }
+#delete-selected {
+
+  width: 100%;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  padding: 18px;
+
+  border: none;
+
+  background: #aa2222;
+
+  color: white;
+
+  font-size: 18px;
+
+  border-radius: 15px;
+}
+
+.image-check {
+
+  width: 25px;
+  height: 25px;
+
+  margin-bottom: 10px;
+}
