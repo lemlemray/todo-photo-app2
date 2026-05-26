@@ -144,3 +144,54 @@ photoInput.addEventListener("change", event => {
 
   reader.readAsDataURL(file);
 });
+showGallery();
+
+function showGallery() {
+
+  const gallery =
+    document.getElementById("gallery");
+
+  gallery.innerHTML = "";
+
+  const userImages =
+    JSON.parse(
+      localStorage.getItem("userImages")
+    ) || [];
+
+  userImages.forEach((image, index) => {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "image-item";
+
+    const img =
+      document.createElement("img");
+
+    img.src = image;
+
+    const button =
+      document.createElement("button");
+
+    button.className = "delete-image";
+
+    button.textContent = "削除";
+
+    button.addEventListener("click", () => {
+
+      userImages.splice(index, 1);
+
+      localStorage.setItem(
+        "userImages",
+        JSON.stringify(userImages)
+      );
+
+      location.reload();
+    });
+
+    div.appendChild(img);
+    div.appendChild(button);
+
+    gallery.appendChild(div);
+  });
+}
