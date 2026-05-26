@@ -1,19 +1,22 @@
-const defaultImages = [
+const initialImages = [
   "images/S__4038781_0.jpg",
   "images/S__4038782_0.jpg",
   "images/S__4038783_0.jpg",
   "images/S__4038784_0.jpg"
 ];
 
-const savedImages =
-  JSON.parse(
-    localStorage.getItem("userImages")
-  ) || [];
+if (!localStorage.getItem("allImages")) {
 
-const allImages = [
-  ...defaultImages,
-  ...savedImages
-];
+  localStorage.setItem(
+    "allImages",
+    JSON.stringify(initialImages)
+  );
+}
+
+let allImages =
+  JSON.parse(
+    localStorage.getItem("allImages")
+  ) || [];
 
 const randomImage =
   allImages[
@@ -141,18 +144,11 @@ photoInput.addEventListener(
       const imageData =
         e.target.result;
 
-      const currentImages =
-        JSON.parse(
-          localStorage.getItem(
-            "userImages"
-          )
-        ) || [];
-
-      currentImages.push(imageData);
+      allImages.push(imageData);
 
       localStorage.setItem(
-        "userImages",
-        JSON.stringify(currentImages)
+        "allImages",
+        JSON.stringify(allImages)
       );
 
       location.reload();
@@ -172,16 +168,9 @@ function showGallery() {
   const gallery =
     document.getElementById("gallery");
 
-  if (!gallery) return;
-
   gallery.innerHTML = "";
 
-  const userImages =
-    JSON.parse(
-      localStorage.getItem("userImages")
-    ) || [];
-
-  userImages.forEach((image, index) => {
+  allImages.forEach((image, index) => {
 
     const div =
       document.createElement("div");
@@ -203,17 +192,18 @@ function showGallery() {
 
     button.onclick = () => {
 
-      userImages.splice(index, 1);
+      allImages.splice(index, 1);
 
       localStorage.setItem(
-        "userImages",
-        JSON.stringify(userImages)
+        "allImages",
+        JSON.stringify(allImages)
       );
 
-      showGallery();
+      location.reload();
     };
 
     div.appendChild(img);
+
     div.appendChild(button);
 
     gallery.appendChild(div);
