@@ -12,10 +12,15 @@ let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 
 
+tasks = tasks.filter(task => task && task.text);
+
+
+
+saveTasks();
+
 drawTasks();
 
 setRandomBackground();
-
 
 
 
@@ -23,7 +28,7 @@ addButton.onclick = () => {
 
     const text = taskInput.value.trim();
 
-    if (text === "") return;
+    if (!text) return;
 
 
 
@@ -32,7 +37,6 @@ addButton.onclick = () => {
         text: text,
 
         completed: false
-
     });
 
 
@@ -41,9 +45,10 @@ addButton.onclick = () => {
 
     drawTasks();
 
+
+
     taskInput.value = "";
 };
-
 
 
 
@@ -74,21 +79,13 @@ function drawTasks() {
             tasks[index].completed = checkbox.checked;
 
             saveTasks();
-
-            drawTasks();
         };
 
 
 
         const span = document.createElement("span");
 
-
-
-        span.innerText = task.text;
-
-
-
-        span.style.color = "white";
+        span.textContent = task.text;
 
 
 
@@ -103,7 +100,7 @@ function drawTasks() {
 
         const deleteButton = document.createElement("button");
 
-        deleteButton.innerText = "削除";
+        deleteButton.textContent = "削除";
 
 
 
@@ -124,18 +121,23 @@ function drawTasks() {
 
         li.appendChild(deleteButton);
 
+
+
         taskList.appendChild(li);
     });
 }
 
 
 
-
 function saveTasks() {
 
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+    localStorage.setItem(
 
+        "tasks",
+
+        JSON.stringify(tasks)
+    );
+}
 
 
 
@@ -149,7 +151,7 @@ imageInput.addEventListener("change", (e) => {
 
 
 
-    let backgrounds = JSON.parse(localStorage.getItem("backgrounds")) || [];
+    let backgrounds = [];
 
 
 
@@ -157,7 +159,7 @@ imageInput.addEventListener("change", (e) => {
 
 
 
-    for (let file of files) {
+    for (const file of files) {
 
         const reader = new FileReader();
 
@@ -203,29 +205,32 @@ imageInput.addEventListener("change", (e) => {
 
 
 
-
 function setRandomBackground() {
 
-    const backgrounds = JSON.parse(localStorage.getItem("backgrounds")) || [];
+    const backgrounds = JSON.parse(
+
+        localStorage.getItem("backgrounds")
+
+    ) || [];
 
 
 
     if (backgrounds.length === 0) {
 
-        document.body.style.backgroundColor = "black";
+        document.body.style.background = "black";
 
         return;
     }
 
 
 
-    const random = backgrounds[
-        Math.floor(Math.random() * backgrounds.length)
-    ];
+    const random = backgrounds[0];
 
 
 
-    document.body.style.backgroundImage = `url(${random.image})`;
+    document.body.style.backgroundImage =
+
+        `url(${random.image})`;
 
 
 
