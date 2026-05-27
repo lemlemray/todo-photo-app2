@@ -6,11 +6,16 @@ const taskList = document.getElementById("task-list");
 
 const imageInput = document.getElementById("image-input");
 
+
+
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+
 
 drawTasks();
 
 setRandomBackground();
+
 
 
 
@@ -20,6 +25,8 @@ addButton.onclick = () => {
 
     if (text === "") return;
 
+
+
     tasks.push({
 
         text: text,
@@ -27,6 +34,8 @@ addButton.onclick = () => {
         completed: false
 
     });
+
+
 
     saveTasks();
 
@@ -37,9 +46,12 @@ addButton.onclick = () => {
 
 
 
+
 function drawTasks() {
 
     taskList.innerHTML = "";
+
+
 
     tasks.forEach((task, index) => {
 
@@ -62,13 +74,21 @@ function drawTasks() {
             tasks[index].completed = checkbox.checked;
 
             saveTasks();
+
+            drawTasks();
         };
 
 
 
         const span = document.createElement("span");
 
-        span.textContent = task.text;
+
+
+        span.innerText = task.text;
+
+
+
+        span.style.color = "white";
 
 
 
@@ -83,7 +103,7 @@ function drawTasks() {
 
         const deleteButton = document.createElement("button");
 
-        deleteButton.textContent = "削除";
+        deleteButton.innerText = "削除";
 
 
 
@@ -110,6 +130,7 @@ function drawTasks() {
 
 
 
+
 function saveTasks() {
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -117,9 +138,12 @@ function saveTasks() {
 
 
 
+
 imageInput.addEventListener("change", (e) => {
 
     const files = e.target.files;
+
+
 
     if (!files.length) return;
 
@@ -176,6 +200,7 @@ imageInput.addEventListener("change", (e) => {
         reader.readAsDataURL(file);
     }
 });
+
 
 
 
