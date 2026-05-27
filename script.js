@@ -8,12 +8,37 @@ const photoArea =
     "photo-area"
   );
 
-let allImages =
-  JSON.parse(
-    localStorage.getItem("allImages")
-  ) || [];
+let db;
 
-showRandomImage();
+const request =
+  indexedDB.open(
+    "PhotoDB",
+    1
+  );
+
+request.onupgradeneeded =
+  event => {
+
+    db =
+      event.target.result;
+
+    db.createObjectStore(
+      "images",
+      {
+        keyPath: "id",
+        autoIncrement: true
+      }
+    );
+  };
+
+request.onsuccess =
+  event => {
+
+    db =
+      event.target.result;
+
+    showRandomImage();
+  };
 
 imageInput.addEventListener(
   "change",
@@ -22,12 +47,12 @@ imageInput.addEventListener(
     const files =
       event.target.files;
 
-    if (!files.length) {
+    if (
+      files.length === 0
+    ) {
 
       return;
     }
-
-    let loaded = 0;
 
     for (
       let i = 0;
@@ -35,68 +60,105 @@ imageInput.addEventListener(
       i++
     ) {
 
-      const file = files[i];
-
-      const reader =
-        new FileReader();
-
-      reader.onload = e => {
-
-        allImages.push(
-          e.target.result
-        );
-
-        loaded++;
-
-        if (
-          loaded === files.length
-        ) {
-
-          localStorage.setItem(
-            "allImages",
-            JSON.stringify(allImages)
-          );
-
-          showRandomImage();
-
-          alert(
-            "画像を追加しました"
-          );
-        }
-      };
-
-      reader.readAsDataURL(file);
+      saveImage(
+        files[i]
+      );
     }
   }
 );
 
+function saveImage(file) {
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    event => {
+
+      const tx =
+        db.transaction(
+          "images",
+          "readwrite"
+        );
+
+      const store =
+        tx.objectStore(
+          "images"
+        );
+
+      store.add({
+        image:
+          event.target.result
+      });
+
+      tx.oncomplete =
+        () => {
+
+          alert(
+            "画像追加完了"
+          );
+
+          showRandomImage();
+        };
+    };
+
+  reader.readAsDataURL(file);
+}
+
 function showRandomImage() {
 
-  photoArea.innerHTML = "";
+  photoArea.innerHTML =
+    "";
 
-  if (
-    allImages.length === 0
-  ) {
+  const tx =
+    db.transaction(
+      "images",
+      "readonly"
+    );
 
-    return;
-  }
+  const store =
+    tx.objectStore(
+      "images"
+    );
 
-  const randomImage =
+  const req =
+    store.getAll();
 
-    allImages[
-      Math.floor(
-        Math.random()
-        * allImages.length
-      )
-    ];
+  req.onsuccess =
+    () => {
 
-  const img =
-    document.createElement("img");
+      const images =
+        req.result;
 
-  img.src = randomImage;
+      if (
+        images.length === 0
+      ) {
 
-  img.className =
-    "main-photo";
+        return;
+      }
 
-  photoArea.appendChild(img);
+      const random =
+
+        images[
+          Math.floor(
+            Math.random()
+            * images.length
+          )
+        ];
+
+      const img =
+        document.createElement(
+          "img"
+        );
+
+      img.src =
+        random.image;
+
+      img.className =
+        "main-photo";
+
+      photoArea.appendChild(
+        img
+      );
+    };
 }

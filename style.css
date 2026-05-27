@@ -1,17 +1,54 @@
-.image-upload {
+body {
 
-  margin-top: 20px;
+  margin: 0;
+
+  background: #111;
+
+  color: white;
+
+  font-family: sans-serif;
 }
 
-.gallery-link {
+.container {
 
-  display: inline-block;
+  padding: 20px;
+}
+
+input,
+button {
+
+  width: 100%;
+
+  margin-top: 15px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-size: 16px;
+}
+
+button {
+
+  background: #333;
+
+  color: white;
+}
+
+a {
+
+  display: block;
 
   margin-top: 20px;
 
   color: white;
+}
 
-  text-decoration: none;
+#photo-area {
+
+  margin-top: 20px;
 }
 
 .main-photo {
@@ -19,6 +56,37 @@
   width: 100%;
 
   border-radius: 20px;
+}
+
+#gallery {
 
   margin-top: 20px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 5px;
+}
+
+.gallery-item {
+
+  border: 3px solid transparent;
+}
+
+.gallery-item.selected {
+
+  border-color: #4da6ff;
+}
+
+.gallery-image {
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  object-fit: cover;
+
+  display: block;
 }

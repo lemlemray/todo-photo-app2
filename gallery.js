@@ -1,14 +1,11 @@
 const gallery =
-  document.getElementById("gallery");
+  document.getElementById(
+    "gallery"
+  );
 
 const selectAllButton =
   document.getElementById(
     "select-all"
-  );
-
-const clearSelectionButton =
-  document.getElementById(
-    "clear-selection"
   );
 
 const deleteButton =
@@ -16,127 +13,177 @@ const deleteButton =
     "delete-button"
   );
 
-let images =
-  JSON.parse(
-    localStorage.getItem("allImages")
-  ) || [];
+let db;
 
 let selected = [];
 
-function saveImages() {
-
-  localStorage.setItem(
-    "allImages",
-    JSON.stringify(images)
+const request =
+  indexedDB.open(
+    "PhotoDB",
+    1
   );
-}
+
+request.onsuccess =
+  event => {
+
+    db =
+      event.target.result;
+
+    drawGallery();
+  };
 
 function drawGallery() {
 
-  gallery.innerHTML = "";
+  gallery.innerHTML =
+    "";
 
-  images.forEach((image, index) => {
+  const tx =
+    db.transaction(
+      "images",
+      "readonly"
+    );
 
-    const item =
-      document.createElement("div");
+  const store =
+    tx.objectStore(
+      "images"
+    );
 
-    item.className =
-      "gallery-item";
+  const req =
+    store.getAll();
 
-    if (
-      selected.includes(index)
-    ) {
+  req.onsuccess =
+    () => {
 
-      item.classList.add(
-        "selected"
-      );
-    }
+      const images =
+        req.result;
 
-    const img =
-      document.createElement("img");
+      images.forEach(
+        imageData => {
 
-    img.src = image;
+          const item =
+            document.createElement(
+              "div"
+            );
 
-    img.className =
-      "gallery-image";
+          item.className =
+            "gallery-item";
 
-    item.appendChild(img);
+          const img =
+            document.createElement(
+              "img"
+            );
 
-    item.onclick = () => {
+          img.src =
+            imageData.image;
 
-      if (
-        selected.includes(index)
-      ) {
+          img.className =
+            "gallery-image";
 
-        selected =
-          selected.filter(
-            i => i !== index
+          item.onclick =
+            () => {
+
+              if (
+                selected.includes(
+                  imageData.id
+                )
+              ) {
+
+                selected =
+                  selected.filter(
+                    id =>
+                      id !==
+                      imageData.id
+                  );
+
+                item.classList.remove(
+                  "selected"
+                );
+
+              } else {
+
+                selected.push(
+                  imageData.id
+                );
+
+                item.classList.add(
+                  "selected"
+                );
+              }
+            };
+
+          item.appendChild(
+            img
           );
 
-      } else {
-
-        selected.push(index);
-      }
-
-      drawGallery();
+          gallery.appendChild(
+            item
+          );
+        } );
     };
-
-    gallery.appendChild(item);
-  });
 }
 
-selectAllButton.onclick = () => {
-
-  selected = [];
-
-  for (
-    let i = 0;
-    i < images.length;
-    i++
-  ) {
-
-    selected.push(i);
-  }
-
-  drawGallery();
-};
-
-clearSelectionButton.onclick = () => {
-
-  selected = [];
-
-  drawGallery();
-};
-
-deleteButton.addEventListener(
-  "click",
+selectAllButton.onclick =
   () => {
-
-    if (
-      selected.length === 0
-    ) {
-
-      alert(
-        "画像が選択されていません"
-      );
-
-      return;
-    }
-
-    images =
-      images.filter(
-        (_, index) =>
-          !selected.includes(index)
-      );
-
-    saveImages();
 
     selected = [];
 
-    drawGallery();
+    const tx =
+      db.transaction(
+        "images",
+        "readonly"
+      );
 
-    alert("削除しました");
-  }
-);
+    const store =
+      tx.objectStore(
+        "images"
+      );
 
-drawGallery();
+    const req =
+      store.getAll();
+
+    req.onsuccess =
+      () => {
+
+        selected =
+          req.result.map(
+            image =>
+              image.id
+          );
+
+        drawGallery();
+      };
+};
+
+deleteButton.onclick =
+  () => {
+
+    const tx =
+      db.transaction(
+        "images",
+        "readwrite"
+      );
+
+    const store =
+      tx.objectStore(
+        "images"
+      );
+
+    selected.forEach(
+      id => {
+
+        store.delete(id);
+      }
+    );
+
+    tx.oncomplete =
+      () => {
+
+        selected = [];
+
+        drawGallery();
+
+        alert(
+          "削除完了"
+        );
+      };
+};
