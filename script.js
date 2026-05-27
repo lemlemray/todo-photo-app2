@@ -1,205 +1,214 @@
-let db;
+const taskInput = document.getElementById("task-input");
 
-const request =
-indexedDB.open("TodoPhotoAppDB", 1);
+const addButton = document.getElementById("add-button");
 
-request.onupgradeneeded = (event) => {
+const taskList = document.getElementById("task-list");
 
-    db = event.target.result;
+const imageInput = document.getElementById("image-input");
 
-    if (!db.objectStoreNames.contains("tasks")) {
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-        db.createObjectStore("tasks", {
-            keyPath: "id",
-            autoIncrement: true
-        });
-    }
+drawTasks();
 
-    if (!db.objectStoreNames.contains("photos")) {
+setRandomBackground();
 
-        db.createObjectStore("photos", {
-            keyPath: "id",
-            autoIncrement: true
-        });
-    }
-};
 
-request.onsuccess = (event) => {
-
-    db = event.target.result;
-
-    loadTasks();
-
-    setRandomBackground();
-};
-
-const taskInput =
-document.getElementById("task-input");
-
-const addButton =
-document.getElementById("add-button");
-
-const taskList =
-document.getElementById("task-list");
 
 addButton.onclick = () => {
 
-    const text =
-    taskInput.value.trim();
+    const text = taskInput.value.trim();
 
     if (text === "") return;
 
-    const transaction =
-    db.transaction(["tasks"], "readwrite");
+    tasks.push({
 
-    const store =
-    transaction.objectStore("tasks");
-
-    store.add({
         text: text,
+
         completed: false
+
     });
 
-    transaction.oncomplete = () => {
+    saveTasks();
 
-        taskInput.value = "";
+    drawTasks();
 
-        loadTasks();
-    };
+    taskInput.value = "";
 };
 
-function loadTasks() {
+
+
+function drawTasks() {
 
     taskList.innerHTML = "";
 
-    const transaction =
-    db.transaction(["tasks"], "readonly");
+    tasks.forEach((task, index) => {
 
-    const store =
-    transaction.objectStore("tasks");
+        const li = document.createElement("li");
 
-    const request =
-    store.getAll();
+        li.className = "task-item";
 
-    request.onsuccess = () => {
 
-        const tasks =
-        request.result;
 
-        tasks.forEach((task) => {
+        const checkbox = document.createElement("input");
 
-            const li =
-            document.createElement("li");
+        checkbox.type = "checkbox";
 
-            li.className =
-            "task-item";
+        checkbox.checked = task.completed;
 
-            const checkbox =
-            document.createElement("input");
 
-            checkbox.type =
-            "checkbox";
 
-            checkbox.checked =
-            task.completed;
+        checkbox.onchange = () => {
 
-            checkbox.onchange = () => {
+            tasks[index].completed = checkbox.checked;
 
-                const transaction =
-                db.transaction(["tasks"], "readwrite");
+            saveTasks();
+        };
 
-                const store =
-                transaction.objectStore("tasks");
 
-                task.completed =
-                checkbox.checked;
 
-                store.put(task);
-            };
+        const span = document.createElement("span");
 
-            const span =
-            document.createElement("span");
+        span.textContent = task.text;
 
-            span.textContent =
-            task.text;
 
-            const deleteButton =
-            document.createElement("button");
 
-            deleteButton.textContent =
-            "削除";
+        if (task.completed) {
 
-            deleteButton.onclick = () => {
+            span.style.textDecoration = "line-through";
 
-                const transaction =
-                db.transaction(["tasks"], "readwrite");
+            span.style.opacity = "0.5";
+        }
 
-                const store =
-                transaction.objectStore("tasks");
 
-                store.delete(task.id);
 
-                transaction.oncomplete = () => {
+        const deleteButton = document.createElement("button");
 
-                    loadTasks();
-                };
-            };
+        deleteButton.textContent = "削除";
 
-            li.appendChild(checkbox);
 
-            li.appendChild(span);
 
-            li.appendChild(deleteButton);
+        deleteButton.onclick = () => {
 
-            taskList.appendChild(li);
-        });
-    };
+            tasks.splice(index, 1);
+
+            saveTasks();
+
+            drawTasks();
+        };
+
+
+
+        li.appendChild(checkbox);
+
+        li.appendChild(span);
+
+        li.appendChild(deleteButton);
+
+        taskList.appendChild(li);
+    });
 }
+
+
+
+function saveTasks() {
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+
+
+imageInput.addEventListener("change", (e) => {
+
+    const files = e.target.files;
+
+    if (!files.length) return;
+
+
+
+    let backgrounds = JSON.parse(localStorage.getItem("backgrounds")) || [];
+
+
+
+    let loaded = 0;
+
+
+
+    for (let file of files) {
+
+        const reader = new FileReader();
+
+
+
+        reader.onload = (event) => {
+
+            backgrounds.push({
+
+                image: event.target.result
+            });
+
+
+
+            loaded++;
+
+
+
+            if (loaded === files.length) {
+
+                localStorage.setItem(
+
+                    "backgrounds",
+
+                    JSON.stringify(backgrounds)
+                );
+
+
+
+                setRandomBackground();
+
+
+
+                alert("写真を追加しました");
+            }
+        };
+
+
+
+        reader.readAsDataURL(file);
+    }
+});
+
+
 
 function setRandomBackground() {
 
-    const transaction =
-    db.transaction(["photos"], "readonly");
+    const backgrounds = JSON.parse(localStorage.getItem("backgrounds")) || [];
 
-    const store =
-    transaction.objectStore("photos");
 
-    const request =
-    store.getAll();
 
-    request.onsuccess = () => {
+    if (backgrounds.length === 0) {
 
-        const photos =
-        request.result;
+        document.body.style.backgroundColor = "black";
 
-        if (photos.length === 0) {
+        return;
+    }
 
-            document.body.style.background =
-            "#111";
 
-            return;
-        }
 
-        const random =
-        photos[
-            Math.floor(
-                Math.random() * photos.length
-            )
-        ];
+    const random = backgrounds[
+        Math.floor(Math.random() * backgrounds.length)
+    ];
 
-        document.body.style.backgroundImage =
-        `url(${random.image})`;
 
-        document.body.style.backgroundSize =
-        "cover";
 
-        document.body.style.backgroundRepeat =
-        "no-repeat";
+    document.body.style.backgroundImage = `url(${random.image})`;
 
-        document.body.style.backgroundPosition =
-        "center";
 
-        document.body.style.backgroundAttachment =
-        "fixed";
-    };
+
+    document.body.style.backgroundSize = "cover";
+
+    document.body.style.backgroundPosition = "center";
+
+    document.body.style.backgroundRepeat = "no-repeat";
+
+    document.body.style.backgroundAttachment = "fixed";
 }
