@@ -23,20 +23,13 @@ let allImages =
 
 let selected = [];
 
-draw();
+renderGallery();
 
-function draw() {
+function renderGallery() {
 
   gallery.innerHTML = "";
 
-  for (
-    let i = 0;
-    i < allImages.length;
-    i++
-  ) {
-
-    const image =
-      allImages[i];
+  allImages.forEach((image, index) => {
 
     const item =
       document.createElement("div");
@@ -45,7 +38,7 @@ function draw() {
       "image-item";
 
     if (
-      selected.includes(i)
+      selected.includes(index)
     ) {
 
       item.classList.add(
@@ -66,70 +59,53 @@ function draw() {
     item.onclick = () => {
 
       if (
-        selected.includes(i)
+        selected.includes(index)
       ) {
 
         selected =
           selected.filter(
-            index => index !== i
+            i => i !== index
           );
 
       } else {
 
-        selected.push(i);
+        selected.push(index);
       }
 
-      draw();
+      renderGallery();
     };
 
     gallery.appendChild(item);
-  }
+  });
 }
 
 selectAllButton.onclick = () => {
 
   selected = [];
 
-  for (
-    let i = 0;
-    i < allImages.length;
-    i++
-  ) {
+  allImages.forEach((_, index) => {
 
-    selected.push(i);
-  }
+    selected.push(index);
 
-  draw();
+  });
+
+  renderGallery();
 };
 
 clearSelectionButton.onclick = () => {
 
   selected = [];
 
-  draw();
+  renderGallery();
 };
 
 deleteSelectedButton.onclick = () => {
 
-  const newImages = [];
-
-  for (
-    let i = 0;
-    i < allImages.length;
-    i++
-  ) {
-
-    if (
-      !selected.includes(i)
-    ) {
-
-      newImages.push(
-        allImages[i]
-      );
-    }
-  }
-
-  allImages = newImages;
+  allImages =
+    allImages.filter(
+      (_, index) =>
+        !selected.includes(index)
+    );
 
   localStorage.setItem(
     "allImages",
@@ -138,5 +114,5 @@ deleteSelectedButton.onclick = () => {
 
   selected = [];
 
-  draw();
+  renderGallery();
 };
