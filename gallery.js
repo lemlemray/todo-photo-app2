@@ -83,11 +83,14 @@ selectAllButton.onclick = () => {
 
   selected = [];
 
-  allImages.forEach((_, index) => {
+  for (
+    let i = 0;
+    i < allImages.length;
+    i++
+  ) {
 
-    selected.push(index);
-
-  });
+    selected.push(i);
+  }
 
   renderGallery();
 };
@@ -101,11 +104,18 @@ clearSelectionButton.onclick = () => {
 
 deleteSelectedButton.onclick = () => {
 
-  allImages =
-    allImages.filter(
-      (_, index) =>
-        !selected.includes(index)
-    );
+  if (selected.length === 0) {
+
+    return;
+  }
+
+  selected.sort((a, b) => b - a);
+
+  selected.forEach(index => {
+
+    allImages.splice(index, 1);
+
+  });
 
   localStorage.setItem(
     "allImages",
