@@ -27,8 +27,7 @@ body {
 
     inset: 0;
 
-    background:
-    rgba(0,0,0,0.18);
+    background: rgba(0,0,0,0.05);
 
     z-index: 0;
 }
@@ -53,6 +52,8 @@ h1 {
     color: white;
 
     font-weight: bold;
+
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
 .input-area {
@@ -76,8 +77,7 @@ h1 {
 
     font-size: 24px;
 
-    background:
-    rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.82);
 
     color: black;
 }
@@ -92,7 +92,7 @@ h1 {
 
     font-size: 22px;
 
-    background: white;
+    background: rgba(255,255,255,0.9);
 
     color: #007aff;
 
@@ -122,11 +122,9 @@ h1 {
 
     border-radius: 34px;
 
-    background:
-    rgba(0,0,0,0.28);
+    background: rgba(0,0,0,0.18);
 
-    backdrop-filter:
-    blur(8px);
+    backdrop-filter: blur(6px);
 
     color: white;
 
@@ -140,6 +138,8 @@ h1 {
     color: white;
 
     word-break: break-word;
+
+    text-shadow: 0 1px 8px rgba(0,0,0,0.7);
 }
 
 .task-item input[type="checkbox"] {
@@ -161,8 +161,7 @@ h1 {
 
     color: white;
 
-    background:
-    rgba(255,0,0,0.78);
+    background: rgba(255,0,0,0.82);
 }
 
 #image-input {
