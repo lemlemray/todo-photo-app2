@@ -196,7 +196,7 @@ imageInput.addEventListener(
             setRandomBackground();
 
             alert(
-              `${files.length}枚追加完了`
+              `${files.length}枚追加しました`
             );
           }
         }
