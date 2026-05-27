@@ -1,147 +1,162 @@
-const taskInput = document.getElementById("task-input");
+const input = document.querySelector("#input");
 
-const addButton = document.getElementById("add-button");
+const button = document.querySelector("#button");
 
-const taskList = document.getElementById("task-list");
+const list = document.querySelector("#list");
 
-const imageInput = document.getElementById("image-input");
-
-
-
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const imageInput = document.querySelector("#image-input");
 
 
 
-tasks = tasks.filter(task => task && task.text);
+let todos =
+    JSON.parse(localStorage.getItem("todos")) || [];
 
 
 
-saveTasks();
-
-drawTasks();
+drawTodos();
 
 setRandomBackground();
 
 
 
-addButton.onclick = () => {
-
-    const text = taskInput.value.trim();
-
-    if (!text) return;
 
 
+button.onclick = () => {
 
-    tasks.push({
+    const text = input.value;
+
+
+
+    if (text === "") return;
+
+
+
+    const todo = {
+
+        id: Date.now(),
 
         text: text,
 
         completed: false
-    });
+
+    };
 
 
 
-    saveTasks();
-
-    drawTasks();
+    todos.push(todo);
 
 
 
-    taskInput.value = "";
+    saveTodos();
+
+    drawTodos();
+
+
+
+    input.value = "";
 };
 
 
 
-function drawTasks() {
-
-    taskList.innerHTML = "";
 
 
+function drawTodos() {
 
-    tasks.forEach((task, index) => {
+    list.innerHTML = "";
+
+
+
+    todos.forEach((todo) => {
 
         const li = document.createElement("li");
 
-        li.className = "task-item";
+
+
+        li.className = "todo-item";
 
 
 
-        const checkbox = document.createElement("input");
+        const check = document.createElement("input");
 
-        checkbox.type = "checkbox";
+        check.type = "checkbox";
 
-        checkbox.checked = task.completed;
+        check.checked = todo.completed;
 
 
 
-        checkbox.onchange = () => {
+        check.onchange = () => {
 
-            tasks[index].completed = checkbox.checked;
+            todo.completed = check.checked;
 
-            saveTasks();
+            saveTodos();
+
         };
 
 
 
         const span = document.createElement("span");
 
-        span.textContent = task.text;
+        span.textContent = todo.text;
 
 
 
-        if (task.completed) {
+        if (todo.completed) {
 
             span.style.textDecoration = "line-through";
 
             span.style.opacity = "0.5";
+
         }
 
 
 
-        const deleteButton = document.createElement("button");
+        const del = document.createElement("button");
 
-        deleteButton.textContent = "削除";
+        del.textContent = "削除";
 
 
 
-        deleteButton.onclick = () => {
+        del.onclick = () => {
 
-            tasks.splice(index, 1);
+            todos = todos.filter((t) => t.id !== todo.id);
 
-            saveTasks();
+            saveTodos();
 
-            drawTasks();
+            drawTodos();
+
         };
 
 
 
-        li.appendChild(checkbox);
+        li.appendChild(check);
 
         li.appendChild(span);
 
-        li.appendChild(deleteButton);
+        li.appendChild(del);
 
 
 
-        taskList.appendChild(li);
+        list.appendChild(li);
     });
 }
 
 
 
-function saveTasks() {
+
+
+function saveTodos() {
 
     localStorage.setItem(
-
-        "tasks",
-
-        JSON.stringify(tasks)
+        "todos",
+        JSON.stringify(todos)
     );
 }
 
 
 
-imageInput.addEventListener("change", (e) => {
+
+
+imageInput.onchange = (e) => {
 
     const files = e.target.files;
 
@@ -151,7 +166,8 @@ imageInput.addEventListener("change", (e) => {
 
 
 
-    let backgrounds = [];
+    let backgrounds =
+        JSON.parse(localStorage.getItem("backgrounds")) || [];
 
 
 
@@ -159,17 +175,24 @@ imageInput.addEventListener("change", (e) => {
 
 
 
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+
+        const file = files[i];
+
+
 
         const reader = new FileReader();
 
 
 
-        reader.onload = (event) => {
+        reader.onload = () => {
 
             backgrounds.push({
 
-                image: event.target.result
+                id: Date.now() + i,
+
+                image: reader.result
+
             });
 
 
@@ -181,19 +204,17 @@ imageInput.addEventListener("change", (e) => {
             if (loaded === files.length) {
 
                 localStorage.setItem(
-
                     "backgrounds",
-
                     JSON.stringify(backgrounds)
                 );
 
 
 
-                setRandomBackground();
-
-
-
                 alert("写真を追加しました");
+
+
+
+                setRandomBackground();
             }
         };
 
@@ -201,36 +222,52 @@ imageInput.addEventListener("change", (e) => {
 
         reader.readAsDataURL(file);
     }
-});
+};
+
+
 
 
 
 function setRandomBackground() {
 
-    const backgrounds = JSON.parse(
+    const backgrounds =
+        JSON.parse(localStorage.getItem("backgrounds")) || [];
 
-        localStorage.getItem("backgrounds")
 
-    ) || [];
+
+    console.log(backgrounds);
 
 
 
     if (backgrounds.length === 0) {
 
-        document.body.style.background = "black";
+        document.body.style.backgroundColor = "black";
 
         return;
     }
 
 
 
-    const random = backgrounds[0];
+    const random =
+        backgrounds[
+            Math.floor(
+                Math.random() * backgrounds.length
+            )
+        ];
+
+
+
+    if (!random.image) {
+
+        console.log("画像データなし");
+
+        return;
+    }
 
 
 
     document.body.style.backgroundImage =
-
-        `url(${random.image})`;
+        `url("${random.image}")`;
 
 
 
