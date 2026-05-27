@@ -1,15 +1,21 @@
-const input = document.querySelector("#input");
+const input =
+document.getElementById("input");
 
-const button = document.querySelector("#button");
+const button =
+document.getElementById("button");
 
-const list = document.querySelector("#list");
+const list =
+document.getElementById("list");
 
-const imageInput = document.querySelector("#image-input");
+const imageInput =
+document.getElementById("image-input");
 
 
 
 let todos =
-    JSON.parse(localStorage.getItem("todos")) || [];
+JSON.parse(
+  localStorage.getItem("todos")
+) || [];
 
 
 
@@ -23,259 +29,280 @@ setRandomBackground();
 
 button.onclick = () => {
 
-    const text = input.value;
+  const text =
+  input.value.trim();
+
+  if(!text) return;
 
 
 
-    if (text === "") return;
+  todos.push({
+
+    id:Date.now(),
+
+    text:text,
+
+    completed:false
+
+  });
 
 
 
-    const todo = {
+  saveTodos();
 
-        id: Date.now(),
+  drawTodos();
 
-        text: text,
+  input.value = "";
+};
 
-        completed: false
 
+
+
+
+function drawTodos(){
+
+  list.innerHTML = "";
+
+
+
+  todos.forEach((todo)=>{
+
+    const li =
+    document.createElement("li");
+
+    li.className =
+    "todo-item";
+
+
+
+    const checkbox =
+    document.createElement("input");
+
+    checkbox.type =
+    "checkbox";
+
+    checkbox.checked =
+    todo.completed;
+
+
+
+    checkbox.onchange = ()=>{
+
+      todo.completed =
+      checkbox.checked;
+
+      saveTodos();
+
+      drawTodos();
     };
 
 
 
-    todos.push(todo);
+    const span =
+    document.createElement("span");
+
+    span.textContent =
+    todo.text;
 
 
 
-    saveTodos();
+    if(todo.completed){
 
-    drawTodos();
+      span.style.textDecoration =
+      "line-through";
 
-
-
-    input.value = "";
-};
-
-
+      span.style.opacity =
+      "0.5";
+    }
 
 
 
-function drawTodos() {
+    const del =
+    document.createElement("button");
 
-    list.innerHTML = "";
-
-
-
-    todos.forEach((todo) => {
-
-        const li = document.createElement("li");
+    del.textContent =
+    "削除";
 
 
 
-        li.className = "todo-item";
+    del.onclick = ()=>{
+
+      todos =
+      todos.filter(
+        t => t.id !== todo.id
+      );
+
+      saveTodos();
+
+      drawTodos();
+    };
 
 
 
-        const check = document.createElement("input");
+    li.appendChild(checkbox);
 
-        check.type = "checkbox";
+    li.appendChild(span);
 
-        check.checked = todo.completed;
-
-
-
-        check.onchange = () => {
-
-            todo.completed = check.checked;
-
-            saveTodos();
-
-        };
+    li.appendChild(del);
 
 
 
-        const span = document.createElement("span");
+    list.appendChild(li);
 
-        span.textContent = todo.text;
+  });
 
-
-
-        if (todo.completed) {
-
-            span.style.textDecoration = "line-through";
-
-            span.style.opacity = "0.5";
-
-        }
-
-
-
-        const del = document.createElement("button");
-
-        del.textContent = "削除";
-
-
-
-        del.onclick = () => {
-
-            todos = todos.filter((t) => t.id !== todo.id);
-
-            saveTodos();
-
-            drawTodos();
-
-        };
-
-
-
-        li.appendChild(check);
-
-        li.appendChild(span);
-
-        li.appendChild(del);
-
-
-
-        list.appendChild(li);
-    });
 }
 
 
 
 
 
-function saveTodos() {
+function saveTodos(){
 
-    localStorage.setItem(
-        "todos",
-        JSON.stringify(todos)
-    );
+  localStorage.setItem(
+    "todos",
+    JSON.stringify(todos)
+  );
 }
 
 
 
 
 
-imageInput.onchange = (e) => {
+imageInput.onchange = (e)=>{
 
-    const files = e.target.files;
+  const files =
+  e.target.files;
 
-
-
-    if (!files.length) return;
-
-
-
-    let backgrounds =
-        JSON.parse(localStorage.getItem("backgrounds")) || [];
+  if(!files.length) return;
 
 
 
-    let loaded = 0;
+  let backgrounds =
+  JSON.parse(
+    localStorage.getItem("backgrounds")
+  ) || [];
 
 
 
-    for (let i = 0; i < files.length; i++) {
-
-        const file = files[i];
+  let loaded = 0;
 
 
 
-        const reader = new FileReader();
+  for(let i=0;i<files.length;i++){
+
+    const file =
+    files[i];
 
 
 
-        reader.onload = () => {
-
-            backgrounds.push({
-
-                id: Date.now() + i,
-
-                image: reader.result
-
-            });
+    const reader =
+    new FileReader();
 
 
 
-            loaded++;
+    reader.onload = ()=>{
+
+      backgrounds.push({
+
+        id:Date.now()+i,
+
+        image:reader.result
+
+      });
 
 
 
-            if (loaded === files.length) {
-
-                localStorage.setItem(
-                    "backgrounds",
-                    JSON.stringify(backgrounds)
-                );
+      loaded++;
 
 
 
-                alert("写真を追加しました");
+      if(
+        loaded === files.length
+      ){
+
+        localStorage.setItem(
+
+          "backgrounds",
+
+          JSON.stringify(backgrounds)
+
+        );
 
 
 
-                setRandomBackground();
-            }
-        };
+        alert(
+          ${files.length}枚追加しました
+        );
 
 
 
-        reader.readAsDataURL(file);
-    }
+        setRandomBackground();
+      }
+    };
+
+
+
+    reader.readAsDataURL(file);
+
+  }
+
 };
 
 
 
 
 
-function setRandomBackground() {
+function setRandomBackground(){
 
-    const backgrounds =
-        JSON.parse(localStorage.getItem("backgrounds")) || [];
+  const backgrounds =
+  JSON.parse(
 
+    localStorage.getItem(
+      "backgrounds"
+    )
 
-
-    console.log(backgrounds);
-
-
-
-    if (backgrounds.length === 0) {
-
-        document.body.style.backgroundColor = "black";
-
-        return;
-    }
+  ) || [];
 
 
 
-    const random =
-        backgrounds[
-            Math.floor(
-                Math.random() * backgrounds.length
-            )
-        ];
+  if(backgrounds.length === 0){
+
+    document.body.style.backgroundColor =
+    "black";
+
+    return;
+  }
 
 
 
-    if (!random.image) {
+  const random =
 
-        console.log("画像データなし");
-
-        return;
-    }
-
-
-
-    document.body.style.backgroundImage =
-        `url("${random.image}")`;
+  backgrounds[
+    Math.floor(
+      Math.random()
+      * backgrounds.length
+    )
+  ];
 
 
 
-    document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundImage =
 
-    document.body.style.backgroundPosition = "center";
+  `url(${random.image})`;
 
-    document.body.style.backgroundRepeat = "no-repeat";
 
-    document.body.style.backgroundAttachment = "fixed";
+
+  document.body.style.backgroundSize =
+  "cover";
+
+  document.body.style.backgroundPosition =
+  "center";
+
+  document.body.style.backgroundRepeat =
+  "no-repeat";
+
+  document.body.style.backgroundAttachment =
+  "fixed";
+
 }

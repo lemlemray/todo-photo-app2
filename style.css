@@ -1,230 +1,210 @@
-body {
-
-    margin: 0;
-
-    padding: 0;
-
-    min-height: 100vh;
-
-    font-family: sans-serif;
-
-    overflow-x: hidden;
-
-    color: white;
-
-    background-size: cover;
-
-    background-position: center;
-
-    background-repeat: no-repeat;
-
-    background-attachment: fixed;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-.overlay {
+body{
+  min-height:100vh;
+  color:white;
+  font-family:sans-serif;
+  overflow-x:hidden;
 
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0,0,0,0.15);
-
-    z-index: 0;
+  background-color:black;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
 }
 
-.container {
-
-    position: relative;
-
-    z-index: 1;
-
-    padding: 20px;
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  z-index:0;
 }
 
-h1 {
-
-    font-size: 72px;
-
-    line-height: 0.9;
-
-    margin-bottom: 40px;
-
-    color: white;
-
-    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+.container{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:500px;
+  margin:auto;
+  padding:20px;
 }
 
-.input-area {
-
-    display: flex;
-
-    gap: 14px;
-
-    margin-bottom: 30px;
+h1{
+  font-size:72px;
+  font-weight:bold;
+  margin-top:40px;
+  margin-bottom:30px;
+  line-height:0.9;
 }
 
-#task-input {
-
-    flex: 1;
-
-    border: none;
-
-    border-radius: 28px;
-
-    padding: 24px;
-
-    font-size: 24px;
-
-    background: rgba(255,255,255,0.82);
-
-    color: black;
+.input-area{
+  display:flex;
+  gap:10px;
+  margin-bottom:30px;
 }
 
-#add-button {
-
-    border: none;
-
-    border-radius: 26px;
-
-    padding: 20px;
-
-    width: 120px;
-
-    font-size: 24px;
-
-    background: rgba(255,255,255,0.9);
-
-    color: #007aff;
+#input{
+  flex:1;
+  padding:20px;
+  border:none;
+  border-radius:30px;
+  font-size:20px;
 }
 
-#task-list {
-
-    list-style: none;
-
-    padding: 0;
-
-    margin: 0;
+#button{
+  width:100px;
+  border:none;
+  border-radius:30px;
+  font-size:22px;
+  background:white;
+  color:#007aff;
 }
 
-.task-item {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 18px;
-
-    margin-bottom: 22px;
-
-    padding: 24px;
-
-    border-radius: 34px;
-
-    background: rgba(0,0,0,0.22);
-
-    backdrop-filter: blur(8px);
+#list{
+  list-style:none;
 }
 
-.task-item span {
+.todo-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 
-    flex: 1;
+  margin-bottom:20px;
+  padding:25px;
 
-    font-size: 28px;
+  border-radius:30px;
 
-    color: white;
+  background:rgba(0,0,0,0.45);
 
-    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-
-    word-break: break-word;
+  backdrop-filter:blur(5px);
 }
 
-.task-item input[type="checkbox"] {
-
-    width: 34px;
-
-    height: 34px;
+.todo-item span{
+  flex:1;
+  font-size:22px;
+  word-break:break-word;
 }
 
-.task-item button {
-
-    border: none;
-
-    border-radius: 18px;
-
-    padding: 14px 20px;
-
-    font-size: 20px;
-
-    color: white;
-
-    background: rgba(255,0,0,0.88);
+.todo-item input{
+  width:35px;
+  height:35px;
 }
 
-#image-input {
+.todo-item button{
+  border:none;
+  background:red;
+  color:white;
 
-    margin-top: 30px;
+  padding:15px 20px;
 
-    font-size: 18px;
+  border-radius:20px;
 
-    color: white;
+  font-size:20px;
 }
 
-.gallery-link {
-
-    display: inline-block;
-
-    margin-top: 20px;
-
-    color: white;
-
-    font-size: 22px;
-
-    text-decoration: none;
+.bottom-area{
+  margin-top:40px;
 }
 
-/* iPhone SE3 */
+.gallery-link{
+  display:block;
+  margin-top:20px;
+  color:white;
+  font-size:24px;
+}
 
-@media (max-width: 430px) {
+.gallery-container{
+  padding:20px;
+}
 
-    h1 {
+.gallery-container h1{
+  font-size:60px;
+  margin-bottom:20px;
+}
 
-        font-size: 42px;
+#gallery-upload{
+  margin-bottom:20px;
+}
 
-        margin-bottom: 30px;
-    }
+.gallery-buttons{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
 
-    #task-input {
+.gallery-buttons button{
+  padding:10px 15px;
+  border:none;
+  border-radius:15px;
+}
 
-        font-size: 18px;
+#gallery-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
 
-        padding: 18px;
-    }
+.gallery-item{
+  position:relative;
+}
 
-    #add-button {
+.gallery-item img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:15px;
+}
 
-        width: 90px;
+.gallery-item input{
+  position:absolute;
+  top:10px;
+  left:10px;
+  width:25px;
+  height:25px;
+}
 
-        font-size: 18px;
+.back-link{
+  display:block;
+  margin-top:30px;
+  color:white;
+  font-size:22px;
+}
 
-        padding: 16px;
-    }
+@media(max-width:430px){
 
-    .task-item {
+  h1{
+    font-size:52px;
+  }
 
-        padding: 18px;
+  #input{
+    font-size:18px;
+    padding:18px;
+  }
 
-        border-radius: 24px;
-    }
+  #button{
+    width:90px;
+    font-size:18px;
+  }
 
-    .task-item span {
+  .todo-item{
+    padding:18px;
+  }
 
-        font-size: 18px;
-    }
+  .todo-item span{
+    font-size:18px;
+  }
 
-    .task-item button {
+  .todo-item button{
+    font-size:16px;
+    padding:12px 16px;
+  }
 
-        font-size: 16px;
-
-        padding: 10px 14px;
-    }
+  .gallery-item img{
+    height:140px;
+  }
 }

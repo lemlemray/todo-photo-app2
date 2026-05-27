@@ -1,238 +1,256 @@
-let db;
+const galleryList =
+document.getElementById(
+  "gallery-list"
+);
+
+const upload =
+document.getElementById(
+  "gallery-upload"
+);
+
+const deleteButton =
+document.getElementById(
+  "delete-button"
+);
+
+const selectAllButton =
+document.getElementById(
+  "select-all"
+);
+
+
+
+
+
+let backgrounds =
+JSON.parse(
+  localStorage.getItem(
+    "backgrounds"
+  )
+) || [];
+
+
 
 let selected = [];
 
-const request =
-  indexedDB.open(
-    "PhotoDB",
-    1
-  );
 
-request.onsuccess =
-  event => {
 
-    db =
-      event.target.result;
-
-    drawGallery();
-  };
+drawGallery();
 
 
 
-function drawGallery() {
 
-  const gallery =
-    document.getElementById(
-      "gallery"
-    );
 
-  gallery.innerHTML = "";
+upload.onchange = (e)=>{
 
-  const tx =
-    db.transaction(
-      "images",
-      "readonly"
-    );
+  const files =
+  e.target.files;
 
-  const store =
-    tx.objectStore(
-      "images"
-    );
-
-  const req =
-    store.getAll();
-
-  req.onsuccess =
-    () => {
-
-      const images =
-        req.result;
-
-      images.forEach(
-        image => {
-
-          const card =
-            document.createElement(
-              "div"
-            );
-
-          card.className =
-            "image-card";
+  if(!files.length) return;
 
 
 
-          const img =
-            document.createElement(
-              "img"
-            );
-
-          img.src =
-            image.image;
+  let loaded = 0;
 
 
 
-          const check =
-            document.createElement(
-              "input"
-            );
+  for(let i=0;i<files.length;i++){
 
-          check.type =
-            "checkbox";
-
-          check.className =
-            "image-check";
+    const reader =
+    new FileReader();
 
 
 
-          check.onchange =
-            () => {
+    reader.onload = ()=>{
 
-              if (
-                check.checked
-              ) {
+      backgrounds.push({
 
-                selected.push(
-                  image.id
-                );
+        id:Date.now()+i,
 
-              } else {
+        image:reader.result
 
-                selected =
-                  selected.filter(
-                    id =>
-                      id !== image.id
-                  );
-              }
-            };
+      });
 
 
 
-          card.appendChild(
-            img
-          );
+      loaded++;
 
-          card.appendChild(
-            check
-          );
 
-          gallery.appendChild(
-            card
-          );
-        }
-      );
+
+      if(
+        loaded === files.length
+      ){
+
+        localStorage.setItem(
+
+          "backgrounds",
+
+          JSON.stringify(backgrounds)
+
+        );
+
+
+
+        alert(
+          ${files.length}枚追加しました
+        );
+
+
+
+        drawGallery();
+
+      }
+
     };
+
+
+
+    reader.readAsDataURL(
+      files[i]
+    );
+
+  }
+
+};
+
+
+
+
+
+function drawGallery(){
+
+  galleryList.innerHTML = "";
+
+
+
+  backgrounds.forEach((bg)=>{
+
+    const item =
+    document.createElement(
+      "div"
+    );
+
+    item.className =
+    "gallery-item";
+
+
+
+    const img =
+    document.createElement(
+      "img"
+    );
+
+    img.src =
+    bg.image;
+
+
+
+    const check =
+    document.createElement(
+      "input"
+    );
+
+    check.type =
+    "checkbox";
+
+
+
+    check.onchange = ()=>{
+
+      if(check.checked){
+
+        selected.push(bg.id);
+
+      }else{
+
+        selected =
+        selected.filter(
+          id => id !== bg.id
+        );
+
+      }
+
+    };
+
+
+
+    item.appendChild(img);
+
+    item.appendChild(check);
+
+
+
+    galleryList.appendChild(item);
+
+  });
+
 }
 
 
 
-/* =====================
-   全選択
-===================== */
 
-const selectAllButton =
-  document.getElementById(
-    "select-all-button"
+
+selectAllButton.onclick = ()=>{
+
+  selected =
+
+  backgrounds.map(
+    bg => bg.id
   );
 
-selectAllButton.onclick =
-  () => {
-
-    selected = [];
-
-    const checks =
-      document.querySelectorAll(
-        ".image-check"
-      );
-
-    checks.forEach(
-      check => {
-
-        check.checked = true;
-
-        const id =
-          Number(
-            check.parentElement.dataset.id
-          );
-      }
-    );
-
-    const tx =
-      db.transaction(
-        "images",
-        "readonly"
-      );
-
-    const store =
-      tx.objectStore(
-        "images"
-      );
-
-    const req =
-      store.getAll();
-
-    req.onsuccess =
-      () => {
-
-        selected =
-          req.result.map(
-            image =>
-              image.id
-          );
-      };
-  };
 
 
-
-/* =====================
-   削除
-===================== */
-
-const deleteButton =
-  document.getElementById(
-    "delete-button"
+  const checks =
+  document.querySelectorAll(
+    ".gallery-item input"
   );
 
-deleteButton.onclick =
-  () => {
 
-    if (
-      selected.length === 0
-    ) {
 
-      alert(
-        "画像を選択してください"
-      );
+  checks.forEach((c)=>{
 
-      return;
-    }
+    c.checked = true;
 
-    const tx =
-      db.transaction(
-        "images",
-        "readwrite"
-      );
+  });
 
-    const store =
-      tx.objectStore(
-        "images"
-      );
+};
 
-    selected.forEach(
-      id => {
 
-        store.delete(id);
-      }
-    );
 
-    tx.oncomplete =
-      () => {
 
-        alert(
-          "削除完了"
-        );
 
-        selected = [];
+deleteButton.onclick = ()=>{
 
-        drawGallery();
-      };
-  };
+  backgrounds =
+
+  backgrounds.filter(
+
+    bg =>
+
+    !selected.includes(bg.id)
+
+  );
+
+
+
+  localStorage.setItem(
+
+    "backgrounds",
+
+    JSON.stringify(backgrounds)
+
+  );
+
+
+
+  selected = [];
+
+
+
+  drawGallery();
+
+
+
+  alert("削除しました");
+
+};

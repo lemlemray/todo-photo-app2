@@ -1,70 +1,54 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Todo Photo App
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo Photo App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="overlay"></div>
+  <div class="overlay"></div>
 
-    <div class="container">
+  <div class="container">
 
-        <h1>
-            What do you need?
-        </h1>
+    <h1>What do you need?</h1>
 
-        <div class="input-area">
+    <div class="input-area">
 
-            <input
-                type="text"
-                id="task-input"
-                placeholder="タスクを書く"
-            >
+      <input
+        type="text"
+        id="input"
+        placeholder="タスクを書く"
+      >
 
-            <button id="add-button">
-                追加
-            </button>
-
-        </div>
-
-        <ul id="task-list"></ul>
-
-        <input
-            type="file"
-            id="image-input"
-            multiple
-            accept="image/*"
-        >
-
-        <a
-            class="gallery-link"
-            href="gallery.html"
-        >
-            画像管理へ
-        </a>
+      <button id="button">
+        追加
+      </button>
 
     </div>
 
-    <script src="script.js"></script>
+    <ul id="list"></ul>
+
+    <div class="bottom-area">
+
+      <input
+        type="file"
+        id="image-input"
+        multiple
+        accept="image/*"
+      >
+
+      <a href="gallery.html" class="gallery-link">
+        画像管理へ
+      </a>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
 
 </body>
-
 </html>
