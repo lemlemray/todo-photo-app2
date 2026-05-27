@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Photo App</title>
+  <title>Todo Photo</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -19,7 +19,23 @@
 
   <div class="container">
 
-    <h1>Photo App</h1>
+    <h1>
+      What do you need?
+    </h1>
+
+    <div class="input-area">
+
+      <input
+        type="text"
+        id="task-input"
+        placeholder="予定を書く"
+      >
+
+      <button id="add-button">
+        追加
+      </button>
+
+    </div>
 
     <input
       type="file"
@@ -33,6 +49,8 @@
     </a>
 
     <div id="photo-area"></div>
+
+    <div id="task-list"></div>
 
   </div>
 

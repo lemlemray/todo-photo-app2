@@ -1,3 +1,18 @@
+const taskInput =
+  document.getElementById(
+    "task-input"
+  );
+
+const addButton =
+  document.getElementById(
+    "add-button"
+  );
+
+const taskList =
+  document.getElementById(
+    "task-list"
+  );
+
 const imageInput =
   document.getElementById(
     "image-input"
@@ -7,6 +22,110 @@ const photoArea =
   document.getElementById(
     "photo-area"
   );
+
+
+
+/* =========================
+   Todo
+========================= */
+
+let tasks =
+  JSON.parse(
+    localStorage.getItem(
+      "tasks"
+    )
+  ) || [];
+
+drawTasks();
+
+addButton.onclick =
+  () => {
+
+    const text =
+      taskInput.value.trim();
+
+    if (!text) {
+
+      return;
+    }
+
+    tasks.push(text);
+
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(tasks)
+    );
+
+    taskInput.value = "";
+
+    drawTasks();
+  };
+
+function drawTasks() {
+
+  taskList.innerHTML = "";
+
+  tasks.forEach(
+    (task, index) => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "task-item";
+
+      const text =
+        document.createElement(
+          "span"
+        );
+
+      text.innerText =
+        task;
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+      deleteButton.innerText =
+        "削除";
+
+      deleteButton.onclick =
+        () => {
+
+          tasks.splice(
+            index,
+            1
+          );
+
+          localStorage.setItem(
+            "tasks",
+            JSON.stringify(tasks)
+          );
+
+          drawTasks();
+        };
+
+      div.appendChild(text);
+
+      div.appendChild(
+        deleteButton
+      );
+
+      taskList.appendChild(
+        div
+      );
+    }
+  );
+}
+
+
+
+/* =========================
+   IndexedDB
+========================= */
 
 let db;
 
@@ -39,6 +158,12 @@ request.onsuccess =
 
     showRandomImage();
   };
+
+
+
+/* =========================
+   Upload
+========================= */
 
 imageInput.addEventListener(
   "change",
@@ -94,16 +219,22 @@ function saveImage(file) {
       tx.oncomplete =
         () => {
 
+          showRandomImage();
+
           alert(
             "画像追加完了"
           );
-
-          showRandomImage();
         };
     };
 
   reader.readAsDataURL(file);
 }
+
+
+
+/* =========================
+   Random Image
+========================= */
 
 function showRandomImage() {
 

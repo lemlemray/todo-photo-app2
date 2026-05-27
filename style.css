@@ -1,92 +1,35 @@
-body {
+.input-area {
 
-  margin: 0;
+  display: flex;
 
-  background: #111;
-
-  color: white;
-
-  font-family: sans-serif;
+  gap: 10px;
 }
 
-.container {
+#task-input {
 
-  padding: 20px;
+  flex: 1;
 }
 
-input,
-button {
-
-  width: 100%;
+.task-item {
 
   margin-top: 15px;
 
   padding: 15px;
 
-  border: none;
+  background: #222;
 
   border-radius: 12px;
 
-  font-size: 16px;
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
 }
 
-button {
+.task-item button {
 
-  background: #333;
+  width: auto;
 
-  color: white;
-}
-
-a {
-
-  display: block;
-
-  margin-top: 20px;
-
-  color: white;
-}
-
-#photo-area {
-
-  margin-top: 20px;
-}
-
-.main-photo {
-
-  width: 100%;
-
-  border-radius: 20px;
-}
-
-#gallery {
-
-  margin-top: 20px;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 5px;
-}
-
-.gallery-item {
-
-  border: 3px solid transparent;
-}
-
-.gallery-item.selected {
-
-  border-color: #4da6ff;
-}
-
-.gallery-image {
-
-  width: 100%;
-
-  aspect-ratio: 1 / 1;
-
-  object-fit: cover;
-
-  display: block;
+  background: #cc3333;
 }
