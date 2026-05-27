@@ -1,298 +1,208 @@
-const taskInput =
-  document.getElementById(
-    "task-input"
-  );
-
-const addButton =
-  document.getElementById(
-    "add-button"
-  );
-
-const todoList =
-  document.getElementById(
-    "todo-list"
-  );
-
-const imageInput =
-  document.getElementById(
-    "image-input"
-  );
-
-
-
-/* ======================
-   Todo
-====================== */
-
-let tasks =
-  JSON.parse(
-    localStorage.getItem(
-      "tasks"
-    )
-  ) || [];
-
-drawTasks();
-
-addButton.onclick =
-  () => {
-
-    const text =
-      taskInput.value.trim();
-
-    if (!text) {
-
-      return;
-    }
-
-    tasks.push(text);
-
-    localStorage.setItem(
-      "tasks",
-      JSON.stringify(tasks)
-    );
-
-    taskInput.value = "";
-
-    drawTasks();
-  };
-
-function drawTasks() {
-
-  todoList.innerHTML =
-    "";
-
-  tasks.forEach(
-    (task, index) => {
-
-      const li =
-        document.createElement(
-          "li"
-        );
-
-      li.className =
-        "task-item";
-
-      const checkbox =
-        document.createElement(
-          "input"
-        );
-
-      checkbox.type =
-        "checkbox";
-
-      checkbox.onchange =
-        () => {
-
-          tasks.splice(
-            index,
-            1
-          );
-
-          localStorage.setItem(
-            "tasks",
-            JSON.stringify(tasks)
-          );
-
-          drawTasks();
-        };
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-      span.innerText =
-        task;
-
-      li.appendChild(
-        checkbox
-      );
-
-      li.appendChild(span);
-
-      todoList.appendChild(
-        li
-      );
-    }
-  );
-}
-
-
-
-/* ======================
-   IndexedDB
-====================== */
-
 let db;
 
 const request =
-  indexedDB.open(
-    "PhotoDB",
-    1
-  );
+indexedDB.open("TodoPhotoAppDB", 1);
 
-request.onupgradeneeded =
-  event => {
+request.onupgradeneeded = (event) => {
 
-    db =
-      event.target.result;
+    db = event.target.result;
 
-    db.createObjectStore(
-      "images",
-      {
-        keyPath: "id",
-        autoIncrement: true
-      }
-    );
-  };
+    if (!db.objectStoreNames.contains("tasks")) {
 
-request.onsuccess =
-  event => {
+        db.createObjectStore("tasks", {
+            keyPath: "id",
+            autoIncrement: true
+        });
+    }
 
-    db =
-      event.target.result;
+    if (!db.objectStoreNames.contains("photos")) {
+
+        db.createObjectStore("photos", {
+            keyPath: "id",
+            autoIncrement: true
+        });
+    }
+};
+
+request.onsuccess = (event) => {
+
+    db = event.target.result;
+
+    loadTasks();
 
     setRandomBackground();
-  };
+};
 
+const taskInput =
+document.getElementById("task-input");
 
+const addButton =
+document.getElementById("add-button");
 
-/* ======================
-   Upload
-====================== */
+const taskList =
+document.getElementById("task-list");
 
-imageInput.addEventListener(
-  "change",
-  event => {
+addButton.onclick = () => {
 
-    const files =
-      event.target.files;
+    const text =
+    taskInput.value.trim();
 
-    if (
-      files.length === 0
-    ) {
+    if (text === "") return;
 
-      return;
-    }
+    const transaction =
+    db.transaction(["tasks"], "readwrite");
 
-    let loaded = 0;
+    const store =
+    transaction.objectStore("tasks");
 
-    for (
-      let i = 0;
-      i < files.length;
-      i++
-    ) {
+    store.add({
+        text: text,
+        completed: false
+    });
 
-      saveImage(
-        files[i],
-        () => {
+    transaction.oncomplete = () => {
 
-          loaded++;
+        taskInput.value = "";
 
-          if (
-            loaded === files.length
-          ) {
-
-            setRandomBackground();
-
-            alert(
-              `${files.length}枚追加しました`
-            );
-          }
-        }
-      );
-    }
-  }
-);
-
-function saveImage(
-  file,
-  callback
-) {
-
-  const reader =
-    new FileReader();
-
-  reader.onload =
-    event => {
-
-      const tx =
-        db.transaction(
-          "images",
-          "readwrite"
-        );
-
-      const store =
-        tx.objectStore(
-          "images"
-        );
-
-      store.add({
-        image:
-          event.target.result
-      });
-
-      tx.oncomplete =
-        () => {
-
-          callback();
-        };
+        loadTasks();
     };
+};
 
-  reader.readAsDataURL(file);
+function loadTasks() {
+
+    taskList.innerHTML = "";
+
+    const transaction =
+    db.transaction(["tasks"], "readonly");
+
+    const store =
+    transaction.objectStore("tasks");
+
+    const request =
+    store.getAll();
+
+    request.onsuccess = () => {
+
+        const tasks =
+        request.result;
+
+        tasks.forEach((task) => {
+
+            const li =
+            document.createElement("li");
+
+            li.className =
+            "task-item";
+
+            const checkbox =
+            document.createElement("input");
+
+            checkbox.type =
+            "checkbox";
+
+            checkbox.checked =
+            task.completed;
+
+            checkbox.onchange = () => {
+
+                const transaction =
+                db.transaction(["tasks"], "readwrite");
+
+                const store =
+                transaction.objectStore("tasks");
+
+                task.completed =
+                checkbox.checked;
+
+                store.put(task);
+            };
+
+            const span =
+            document.createElement("span");
+
+            span.textContent =
+            task.text;
+
+            const deleteButton =
+            document.createElement("button");
+
+            deleteButton.textContent =
+            "削除";
+
+            deleteButton.onclick = () => {
+
+                const transaction =
+                db.transaction(["tasks"], "readwrite");
+
+                const store =
+                transaction.objectStore("tasks");
+
+                store.delete(task.id);
+
+                transaction.oncomplete = () => {
+
+                    loadTasks();
+                };
+            };
+
+            li.appendChild(checkbox);
+
+            li.appendChild(span);
+
+            li.appendChild(deleteButton);
+
+            taskList.appendChild(li);
+        });
+    };
 }
-
-
-
-/* ======================
-   Background
-====================== */
 
 function setRandomBackground() {
 
-  const tx =
-    db.transaction(
-      "images",
-      "readonly"
-    );
+    const transaction =
+    db.transaction(["photos"], "readonly");
 
-  const store =
-    tx.objectStore(
-      "images"
-    );
+    const store =
+    transaction.objectStore("photos");
 
-  const req =
+    const request =
     store.getAll();
 
-  req.onsuccess =
-    () => {
+    request.onsuccess = () => {
 
-      const images =
-        req.result;
+        const photos =
+        request.result;
 
-      if (
-        images.length === 0
-      ) {
+        if (photos.length === 0) {
 
-        return;
-      }
+            document.body.style.background =
+            "#111";
 
-      const random =
+            return;
+        }
 
-        images[
-          Math.floor(
-            Math.random()
-            * images.length
-          )
+        const random =
+        photos[
+            Math.floor(
+                Math.random() * photos.length
+            )
         ];
 
-      document.body.style.backgroundImage =
+        document.body.style.backgroundImage =
         `url(${random.image})`;
 
-      document.body.style.backgroundSize =
-        "cover";
+        document.body.style.backgroundSize =
+        "60%";
 
-      document.body.style.backgroundPosition =
-        "center";
+        document.body.style.backgroundRepeat =
+        "no-repeat";
+
+        document.body.style.backgroundPosition =
+        "center top";
+
+        document.body.style.backgroundColor =
+        "black";
+
+        document.body.style.backgroundAttachment =
+        "fixed";
     };
 }
