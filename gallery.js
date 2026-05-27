@@ -1,18 +1,3 @@
-const gallery =
-  document.getElementById(
-    "gallery"
-  );
-
-const selectAllButton =
-  document.getElementById(
-    "select-all"
-  );
-
-const deleteButton =
-  document.getElementById(
-    "delete-button"
-  );
-
 let db;
 
 let selected = [];
@@ -32,10 +17,16 @@ request.onsuccess =
     drawGallery();
   };
 
+
+
 function drawGallery() {
 
-  gallery.innerHTML =
-    "";
+  const gallery =
+    document.getElementById(
+      "gallery"
+    );
+
+  gallery.innerHTML = "";
 
   const tx =
     db.transaction(
@@ -58,15 +49,17 @@ function drawGallery() {
         req.result;
 
       images.forEach(
-        imageData => {
+        image => {
 
-          const item =
+          const card =
             document.createElement(
               "div"
             );
 
-          item.className =
-            "gallery-item";
+          card.className =
+            "image-card";
+
+
 
           const img =
             document.createElement(
@@ -74,58 +67,94 @@ function drawGallery() {
             );
 
           img.src =
-            imageData.image;
+            image.image;
 
-          img.className =
-            "gallery-image";
 
-          item.onclick =
+
+          const check =
+            document.createElement(
+              "input"
+            );
+
+          check.type =
+            "checkbox";
+
+          check.className =
+            "image-check";
+
+
+
+          check.onchange =
             () => {
 
               if (
-                selected.includes(
-                  imageData.id
-                )
+                check.checked
               ) {
 
-                selected =
-                  selected.filter(
-                    id =>
-                      id !==
-                      imageData.id
-                  );
-
-                item.classList.remove(
-                  "selected"
+                selected.push(
+                  image.id
                 );
 
               } else {
 
-                selected.push(
-                  imageData.id
-                );
-
-                item.classList.add(
-                  "selected"
-                );
+                selected =
+                  selected.filter(
+                    id =>
+                      id !== image.id
+                  );
               }
             };
 
-          item.appendChild(
+
+
+          card.appendChild(
             img
           );
 
-          gallery.appendChild(
-            item
+          card.appendChild(
+            check
           );
-        } );
+
+          gallery.appendChild(
+            card
+          );
+        }
+      );
     };
 }
+
+
+
+/* =====================
+   全選択
+===================== */
+
+const selectAllButton =
+  document.getElementById(
+    "select-all-button"
+  );
 
 selectAllButton.onclick =
   () => {
 
     selected = [];
+
+    const checks =
+      document.querySelectorAll(
+        ".image-check"
+      );
+
+    checks.forEach(
+      check => {
+
+        check.checked = true;
+
+        const id =
+          Number(
+            check.parentElement.dataset.id
+          );
+      }
+    );
 
     const tx =
       db.transaction(
@@ -149,13 +178,33 @@ selectAllButton.onclick =
             image =>
               image.id
           );
-
-        drawGallery();
       };
-};
+  };
+
+
+
+/* =====================
+   削除
+===================== */
+
+const deleteButton =
+  document.getElementById(
+    "delete-button"
+  );
 
 deleteButton.onclick =
   () => {
+
+    if (
+      selected.length === 0
+    ) {
+
+      alert(
+        "画像を選択してください"
+      );
+
+      return;
+    }
 
     const tx =
       db.transaction(
@@ -178,12 +227,12 @@ deleteButton.onclick =
     tx.oncomplete =
       () => {
 
-        selected = [];
-
-        drawGallery();
-
         alert(
           "削除完了"
         );
+
+        selected = [];
+
+        drawGallery();
       };
-};
+  };
