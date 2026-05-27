@@ -1,50 +1,47 @@
 const gallery =
   document.getElementById("gallery");
 
-const deleteSelectedButton =
-  document.getElementById(
-    "delete-selected"
-  );
-
 const selectAllButton =
   document.getElementById(
     "select-all"
   );
 
-const clearSelectionButton =
+const clearAllButton =
   document.getElementById(
-    "clear-selection"
+    "clear-all"
   );
 
-let allImages =
+const deleteButton =
+  document.getElementById(
+    "delete-button"
+  );
+
+let images =
   JSON.parse(
     localStorage.getItem("allImages")
   ) || [];
 
-let selected = [];
+let selectedImages = [];
 
-renderGallery();
+function saveImages() {
 
-function renderGallery() {
+  localStorage.setItem(
+    "allImages",
+    JSON.stringify(images)
+  );
+}
+
+function drawGallery() {
 
   gallery.innerHTML = "";
 
-  allImages.forEach((image, index) => {
+  images.forEach((image, index) => {
 
     const item =
       document.createElement("div");
 
     item.className =
-      "image-item";
-
-    if (
-      selected.includes(index)
-    ) {
-
-      item.classList.add(
-        "selected"
-      );
-    }
+      "gallery-item";
 
     const img =
       document.createElement("img");
@@ -54,26 +51,35 @@ function renderGallery() {
     img.className =
       "gallery-image";
 
-    item.appendChild(img);
+    if (
+      selectedImages.includes(index)
+    ) {
+
+      item.classList.add(
+        "selected"
+      );
+    }
 
     item.onclick = () => {
 
       if (
-        selected.includes(index)
+        selectedImages.includes(index)
       ) {
 
-        selected =
-          selected.filter(
+        selectedImages =
+          selectedImages.filter(
             i => i !== index
           );
 
       } else {
 
-        selected.push(index);
+        selectedImages.push(index);
       }
 
-      renderGallery();
+      drawGallery();
     };
+
+    item.appendChild(img);
 
     gallery.appendChild(item);
   });
@@ -81,48 +87,40 @@ function renderGallery() {
 
 selectAllButton.onclick = () => {
 
-  selected = [];
+  selectedImages = [];
 
   for (
     let i = 0;
-    i < allImages.length;
+    i < images.length;
     i++
   ) {
 
-    selected.push(i);
+    selectedImages.push(i);
   }
 
-  renderGallery();
+  drawGallery();
 };
 
-clearSelectionButton.onclick = () => {
+clearAllButton.onclick = () => {
 
-  selected = [];
+  selectedImages = [];
 
-  renderGallery();
+  drawGallery();
 };
 
-deleteSelectedButton.onclick = () => {
+deleteButton.onclick = () => {
 
-  if (selected.length === 0) {
+  images =
+    images.filter(
+      (_, index) =>
+        !selectedImages.includes(index)
+    );
 
-    return;
-  }
+  saveImages();
 
-  selected.sort((a, b) => b - a);
+  selectedImages = [];
 
-  selected.forEach(index => {
-
-    allImages.splice(index, 1);
-
-  });
-
-  localStorage.setItem(
-    "allImages",
-    JSON.stringify(allImages)
-  );
-
-  selected = [];
-
-  renderGallery();
+  drawGallery();
 };
+
+drawGallery();
