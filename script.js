@@ -191,16 +191,13 @@ function setRandomBackground() {
         `url(${random.image})`;
 
         document.body.style.backgroundSize =
-        "60%";
+        "cover";
 
         document.body.style.backgroundRepeat =
         "no-repeat";
 
         document.body.style.backgroundPosition =
-        "center top";
-
-        document.body.style.backgroundColor =
-        "black";
+        "center";
 
         document.body.style.backgroundAttachment =
         "fixed";
