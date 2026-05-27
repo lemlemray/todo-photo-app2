@@ -175,6 +175,8 @@ imageInput.addEventListener(
       return;
     }
 
+    let loaded = 0;
+
     for (
       let i = 0;
       i < files.length;
@@ -182,13 +184,31 @@ imageInput.addEventListener(
     ) {
 
       saveImage(
-        files[i]
+        files[i],
+        () => {
+
+          loaded++;
+
+          if (
+            loaded === files.length
+          ) {
+
+            setRandomBackground();
+
+            alert(
+              `${files.length}枚追加完了`
+            );
+          }
+        }
       );
     }
   }
 );
 
-function saveImage(file) {
+function saveImage(
+  file,
+  callback
+) {
 
   const reader =
     new FileReader();
@@ -215,11 +235,7 @@ function saveImage(file) {
       tx.oncomplete =
         () => {
 
-          setRandomBackground();
-
-          alert(
-            "画像追加完了"
-          );
+          callback();
         };
     };
 
