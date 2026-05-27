@@ -17,6 +17,8 @@
 
 <body>
 
+  <div class="overlay"></div>
+
   <div class="container">
 
     <h1>
@@ -28,7 +30,7 @@
       <input
         type="text"
         id="task-input"
-        placeholder="予定を書く"
+        placeholder="タスクを書く"
       >
 
       <button id="add-button">
@@ -37,6 +39,8 @@
 
     </div>
 
+    <ul id="todo-list"></ul>
+
     <input
       type="file"
       id="image-input"
@@ -44,13 +48,12 @@
       accept="image/*"
     >
 
-    <a href="gallery.html">
+    <a
+      class="gallery-link"
+      href="gallery.html"
+    >
       画像管理へ
     </a>
-
-    <div id="photo-area"></div>
-
-    <div id="task-list"></div>
 
   </div>
 

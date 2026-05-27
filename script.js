@@ -8,9 +8,9 @@ const addButton =
     "add-button"
   );
 
-const taskList =
+const todoList =
   document.getElementById(
-    "task-list"
+    "todo-list"
   );
 
 const imageInput =
@@ -18,16 +18,11 @@ const imageInput =
     "image-input"
   );
 
-const photoArea =
-  document.getElementById(
-    "photo-area"
-  );
 
 
-
-/* =========================
+/* ======================
    Todo
-========================= */
+====================== */
 
 let tasks =
   JSON.parse(
@@ -63,36 +58,29 @@ addButton.onclick =
 
 function drawTasks() {
 
-  taskList.innerHTML = "";
+  todoList.innerHTML =
+    "";
 
   tasks.forEach(
     (task, index) => {
 
-      const div =
+      const li =
         document.createElement(
-          "div"
+          "li"
         );
 
-      div.className =
+      li.className =
         "task-item";
 
-      const text =
+      const checkbox =
         document.createElement(
-          "span"
+          "input"
         );
 
-      text.innerText =
-        task;
+      checkbox.type =
+        "checkbox";
 
-      const deleteButton =
-        document.createElement(
-          "button"
-        );
-
-      deleteButton.innerText =
-        "削除";
-
-      deleteButton.onclick =
+      checkbox.onchange =
         () => {
 
           tasks.splice(
@@ -108,14 +96,22 @@ function drawTasks() {
           drawTasks();
         };
 
-      div.appendChild(text);
+      const span =
+        document.createElement(
+          "span"
+        );
 
-      div.appendChild(
-        deleteButton
+      span.innerText =
+        task;
+
+      li.appendChild(
+        checkbox
       );
 
-      taskList.appendChild(
-        div
+      li.appendChild(span);
+
+      todoList.appendChild(
+        li
       );
     }
   );
@@ -123,9 +119,9 @@ function drawTasks() {
 
 
 
-/* =========================
+/* ======================
    IndexedDB
-========================= */
+====================== */
 
 let db;
 
@@ -156,14 +152,14 @@ request.onsuccess =
     db =
       event.target.result;
 
-    showRandomImage();
+    setRandomBackground();
   };
 
 
 
-/* =========================
+/* ======================
    Upload
-========================= */
+====================== */
 
 imageInput.addEventListener(
   "change",
@@ -219,7 +215,7 @@ function saveImage(file) {
       tx.oncomplete =
         () => {
 
-          showRandomImage();
+          setRandomBackground();
 
           alert(
             "画像追加完了"
@@ -232,14 +228,11 @@ function saveImage(file) {
 
 
 
-/* =========================
-   Random Image
-========================= */
+/* ======================
+   Background
+====================== */
 
-function showRandomImage() {
-
-  photoArea.innerHTML =
-    "";
+function setRandomBackground() {
 
   const tx =
     db.transaction(
@@ -277,19 +270,13 @@ function showRandomImage() {
           )
         ];
 
-      const img =
-        document.createElement(
-          "img"
-        );
+      document.body.style.backgroundImage =
+        `url(${random.image})`;
 
-      img.src =
-        random.image;
+      document.body.style.backgroundSize =
+        "cover";
 
-      img.className =
-        "main-photo";
-
-      photoArea.appendChild(
-        img
-      );
+      document.body.style.backgroundPosition =
+        "center";
     };
 }
