@@ -6,9 +6,9 @@ const selectAllButton =
     "select-all"
   );
 
-const clearAllButton =
+const clearSelectionButton =
   document.getElementById(
-    "clear-all"
+    "clear-selection"
   );
 
 const deleteButton =
@@ -21,7 +21,7 @@ let images =
     localStorage.getItem("allImages")
   ) || [];
 
-let selectedImages = [];
+let selected = [];
 
 function saveImages() {
 
@@ -43,6 +43,15 @@ function drawGallery() {
     item.className =
       "gallery-item";
 
+    if (
+      selected.includes(index)
+    ) {
+
+      item.classList.add(
+        "selected"
+      );
+    }
+
     const img =
       document.createElement("img");
 
@@ -51,35 +60,26 @@ function drawGallery() {
     img.className =
       "gallery-image";
 
-    if (
-      selectedImages.includes(index)
-    ) {
-
-      item.classList.add(
-        "selected"
-      );
-    }
+    item.appendChild(img);
 
     item.onclick = () => {
 
       if (
-        selectedImages.includes(index)
+        selected.includes(index)
       ) {
 
-        selectedImages =
-          selectedImages.filter(
+        selected =
+          selected.filter(
             i => i !== index
           );
 
       } else {
 
-        selectedImages.push(index);
+        selected.push(index);
       }
 
       drawGallery();
     };
-
-    item.appendChild(img);
 
     gallery.appendChild(item);
   });
@@ -87,7 +87,7 @@ function drawGallery() {
 
 selectAllButton.onclick = () => {
 
-  selectedImages = [];
+  selected = [];
 
   for (
     let i = 0;
@@ -95,32 +95,48 @@ selectAllButton.onclick = () => {
     i++
   ) {
 
-    selectedImages.push(i);
+    selected.push(i);
   }
 
   drawGallery();
 };
 
-clearAllButton.onclick = () => {
+clearSelectionButton.onclick = () => {
 
-  selectedImages = [];
-
-  drawGallery();
-};
-
-deleteButton.onclick = () => {
-
-  images =
-    images.filter(
-      (_, index) =>
-        !selectedImages.includes(index)
-    );
-
-  saveImages();
-
-  selectedImages = [];
+  selected = [];
 
   drawGallery();
 };
+
+deleteButton.addEventListener(
+  "click",
+  () => {
+
+    if (
+      selected.length === 0
+    ) {
+
+      alert(
+        "画像が選択されていません"
+      );
+
+      return;
+    }
+
+    images =
+      images.filter(
+        (_, index) =>
+          !selected.includes(index)
+      );
+
+    saveImages();
+
+    selected = [];
+
+    drawGallery();
+
+    alert("削除しました");
+  }
+);
 
 drawGallery();

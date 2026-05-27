@@ -9,15 +9,13 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Todo Photo App</title>
+  <title>Todo Photo</title>
 
   <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
-
-  <div class="overlay"></div>
 
   <div class="container">
 
@@ -28,7 +26,7 @@
       <input
         type="text"
         id="task-input"
-        placeholder="タスクを書く"
+        placeholder="予定を書く"
       >
 
       <button id="add-button">
@@ -37,25 +35,27 @@
 
     </div>
 
-    <ul id="todo-list"></ul>
-
-    <div class="photo-area">
+    <div class="image-upload">
 
       <input
         type="file"
-        id="photo-input"
-        accept="image/*"
+        id="image-input"
         multiple
+        accept="image/*"
       >
 
     </div>
 
     <a
-      href="gallery.html"
       class="gallery-link"
+      href="gallery.html"
     >
       画像管理へ
     </a>
+
+    <div id="photo-area"></div>
+
+    <div id="task-list"></div>
 
   </div>
 
